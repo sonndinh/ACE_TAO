@@ -15,15 +15,15 @@ INTEGRITYTARGET = 1
 
 #### Green Hills location, and target-specific definitions.
 ifndef GHSROOT
-  GHSROOT = /home/scooter2/i40_solaris2
+  GHSROOT = /usr/ghs/comp_202354
 endif
 
 ifndef RTOSROOT
-  RTOSROOT = /export/integrity/rtos
+  RTOSROOT =  /usr/ghs/int1146
 endif
 
 ifndef BSP
-  BSP = mcp750
+  BSP = sim800
 endif
 
 ifndef TARGET_BSP
@@ -36,6 +36,7 @@ endif
 
 #### Set Integrity version
 verline := $(shell ($(GHSROOT)/gversion 2>&1|grep "Green Hills Software"))
+echo "Version: $(verline)"
 ifeq "$(verline)" ""
   $(error Not Green Hills or the environment is not set-up)
 endif
@@ -51,10 +52,12 @@ CC = $(GHSROOT)/cc$(CPU)
 CXX = $(GHSROOT)/cx$(CPU)
 
 # undefine "vector" because it's predefined for 7400 boards
-IOPS = -bspname=$(RTOSROOT)/target/$(BSP).bld -os_dir $(RTOSROOT) --one_instantiation_per_object -non_shared -Uvector
+# The following is the original
+#IOPS = -bspname=$(RTOSROOT)/target/$(BSP).bld -os_dir $(RTOSROOT) --one_instantiation_per_object -non_shared -Uvector
+IOPS = -bspname=$(RTOSROOT)/target/$(BSP).bld --one_instantiation_per_object -non_shared -Uvector
 IOPS += --exceptions
 
-CCFLAGS  += $(CFLAGS) -integrate -dynamic -I$(RTOSROOT)/INTEGRITY-include-SCA $(IOPS) -bspfile=$(TARGET_BSP) $(TARGET_LD)
+CCFLAGS  += $(CFLAGS) -integrate -dynamic -I$(RTOSROOT)/INTEGRITY-include $(IOPS) -bspfile=$(TARGET_BSP) $(TARGET_LD)
 DCFLAGS  += -G
 SOFLAGS  += -shared
 DLD      = $(CXX)
