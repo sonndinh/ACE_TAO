@@ -17,6 +17,10 @@
 *S_T.inl
 *.bmak
 *.recipe
+*.gpj
+*.int
+*.custom_build_rule
+*.empty_html_file
 
 .depend.*
 GNUmakefile*
