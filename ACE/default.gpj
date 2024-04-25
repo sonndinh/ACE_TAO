@@ -9,9 +9,12 @@ primaryTarget=ppc_integrity.tgt
 customization=${__OS_DIR}\target\integrity.bod
 [Project]
 	#--one_instantiation_per_object
+	#-c99
+	--stdle
+	--c++14
 	:sourceDir=.
 	:optionsFile=${__OS_DIR}\target\${__BSP_NAME}.opt
-	-I${__OS_DIR}\INTEGRITY-include
+	#-I${__OS_DIR}\INTEGRITY-include
 	-I${ACE_ROOT}
 	-language=cxx
 	#--long_long
@@ -19,9 +22,8 @@ customization=${__OS_DIR}\target\integrity.bod
 	-bsp ${__BSP_NAME}
 	-os_dir ${__OS_DIR}
 	#--c++11
-	-c17
-	--stdle
-	--c++17
+	#-c17
+	#-ansi
 ace/ACE.gpj		[Library]
 	#-pic
 	-object_dir=ace/.shobj
