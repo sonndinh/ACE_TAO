@@ -1196,7 +1196,11 @@ ACE_OS::mkstemp_emulation (ACE_TCHAR * s)
 #endif /* ACE_LACKS_MKSTEMP */
 
 #if !defined (ACE_HAS_GETPROGNAME) && !defined (ACE_HAS_SETPROGNAME)
+#  if defined (ghs)
+static char *__progname = "";
+#  else
 static const char *__progname = "";
+#  endif
 #endif /* !ACE_HAS_GETPROGNAME && !ACE_HAS_SETPROGNAME */
 
 #if !defined (ACE_HAS_GETPROGNAME)
@@ -1213,9 +1217,17 @@ ACE_OS::setprogname_emulation (const char* progname)
 {
   const char *p = ACE_OS::strrchr (progname, '/');
   if (p != 0)
+#  if defined(ghs)
+    __progname = const_cast<char*> (p + 1);
+#  else
     __progname = p + 1;
+#  endif
   else
+#  if defined(ghs)
+    __progname = const_cast<char*> (progname);
+#  else
     __progname = progname;
+#  endif
 }
 #endif /* !ACE_HAS_SETPROGNAME */
 

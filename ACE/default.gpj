@@ -10,8 +10,10 @@ customization=${__OS_DIR}\target\integrity.bod
 [Project]
 	#--one_instantiation_per_object
 	#-c99
+	-gcc
 	--stdle
 	--c++14
+	--libcxx
 	:sourceDir=.
 	:optionsFile=${__OS_DIR}\target\${__BSP_NAME}.opt
 	#-I${__OS_DIR}\INTEGRITY-include

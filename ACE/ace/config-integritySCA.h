@@ -70,6 +70,14 @@
 #define ACE_LACKS_KEY_T
 
 #define ACE_HAS_WCHAR
+#define ACE_LACKS_ISCTYPE
+#define ACE_LACKS_WCSICMP
+#define ACE_LACKS_WCSNICMP
+#define ACE_LACKS_WCSDUP
+#define ACE_LACKS_WCSTOK
+#define ACE_LACKS_ALPHASORT
+#define ACE_LACKS_ITOW
+#define ACE_LACKS_STRPTIME
 
 /****** Posix Defines *****/
 #define ACE_LACKS_SUSECONDS_T
