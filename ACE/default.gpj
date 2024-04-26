@@ -11,7 +11,6 @@ customization=${__OS_DIR}\target\integrity.bod
 	#--one_instantiation_per_object
 	#-c99
 	-gcc
-	--stdle
 	--c++14
 	--libcxx
 	:sourceDir=.
@@ -26,6 +25,7 @@ customization=${__OS_DIR}\target\integrity.bod
 	#--c++11
 	#-c17
 	#-ansi
+	-non_shared
 ace/ACE.gpj		[Library]
 	#-pic
 	-object_dir=ace/.shobj
