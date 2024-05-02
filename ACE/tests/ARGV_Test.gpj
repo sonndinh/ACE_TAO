@@ -12,9 +12,8 @@
 	-L${__BUILD_DIR}/lib
 	-lTest_Output
 	-lACE
-	# When to include which: posix vs. posix_sys_client
-	#-lposix
-	-lposix_sys_client
+	-lposix
+	#-lposix_sys_client
 	-livfs
 	-lshm_client
 	-lsocket

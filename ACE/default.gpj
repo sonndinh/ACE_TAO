@@ -30,9 +30,9 @@ ace/ACE.gpj		[Library]
 	# Note on include and library paths:
 	# Paths for -I or -L flags are relative to the directory that contains
 	# the current gpj file. For example, we are in default.gpj file which is in
-	# $ACE_ROOT/ACE, and the paths will be relative to this base path.
+	# $ACE_ROOT, and the paths will be relative to this base path.
 	# If this was a subproject gpj file, such as ACE.gpj, then the paths will
-	# be relative to the base path of $ACE_ROOT/ACE/ace.
+	# be relative to the base path of the ACE source code, which is $ACE_ROOT/ace.
 	
 	#-pic
 	#-object_dir=ace/.shobj

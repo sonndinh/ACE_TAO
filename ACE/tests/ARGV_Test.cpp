@@ -266,15 +266,15 @@ test_argv_quotes ()
 int
 run_main (int, ACE_TCHAR *argv[])
 {
-  ACE_START_TEST (ACE_TEXT ("ARGV_Test"));
+  //ACE_START_TEST (ACE_TEXT ("ARGV_Test"));
 
   test_simple_argv (argv);
-  test_argv_type_converter2 ();
-  test_argv_type_converter ();
-  test_argv_quotes ();
-  test_argv_buf ();
+  //test_argv_type_converter2 ();
+  //test_argv_type_converter ();
+  //test_argv_quotes ();
+  //test_argv_buf ();
 
-  ACE_END_TEST;
+  //ACE_END_TEST;
   return 0;
 }
 

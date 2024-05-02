@@ -78,6 +78,7 @@
 #define ACE_LACKS_ALPHASORT
 #define ACE_LACKS_ITOW
 #define ACE_LACKS_STRPTIME
+#define ACE_LACKS_SYSTEM
 
 /****** Posix Defines *****/
 #define ACE_LACKS_SUSECONDS_T

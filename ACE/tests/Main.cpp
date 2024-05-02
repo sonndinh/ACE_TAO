@@ -11,11 +11,19 @@
 //=============================================================================
 
 #include "ace/OS_main.h"
+#include "ace/Log_Msg.h"
+
+extern "C" {
+  char *shm_area_name = "Example_Area";
+  char *shm_area_password = "******";
+}
 
 int run_main (int argc, ACE_TCHAR *argv[]);
 
 int
 ACE_TMAIN (int argc, ACE_TCHAR *argv[])
 {
+  printf("In ACE_TMAIN of ARGV_Test\n");
+  ACE_DEBUG((LM_DEBUG, "Trying to use ACE_DEBUG macro\n"));
   return run_main (argc, argv);
 }
