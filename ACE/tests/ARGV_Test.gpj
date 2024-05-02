@@ -1,6 +1,7 @@
 #!gbuild
 #primaryTarget=ppc_integrity.tgt
 	[Program]
+	#-DACE_TEST_LOG_TO_STDERR
 	-o tests/ARGV_Test
 	-Ospeed
 	-OI

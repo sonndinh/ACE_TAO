@@ -95,17 +95,21 @@ ACE_Test_Output::set_output (const ACE_TCHAR *filename, int append)
     }
 
 #endif /* ACE_WIN32 */
+  // dinhs: Hardcode the log file path
   if (test_dir == 0)
-    test_dir = ACE_DEFAULT_TEST_DIR;
+    test_dir = "/";
+    //test_dir = ACE_DEFAULT_TEST_DIR;
 
   // This could be done with ACE_OS::sprintf() but it requires different
   // format strings for wide-char POSIX vs. narrow-char POSIX and Windows.
   // Easier to keep straight like this.
   ACE_OS::strncpy (temp, test_dir, MAXPATHLEN);
-  ACE_OS::strcat (temp, ACE_LOG_DIRECTORY);
+  // dinhs: Skip the directory path for now.
+  //ACE_OS::strcat (temp, ACE_LOG_DIRECTORY);
   ACE_OS::strcat (temp,
                   ACE::basename (filename, ACE_DIRECTORY_SEPARATOR_CHAR));
   ACE_OS::strcat (temp, ACE_LOG_FILE_EXT_NAME);
+  ACE_DEBUG((LM_DEBUG, "(dinhs) File path: %C\n", temp));
 
 #if defined (ACE_VXWORKS)
   // This is the only way I could figure out to avoid a console
@@ -125,7 +129,8 @@ ACE_Test_Output::set_output (const ACE_TCHAR *filename, int append)
   // directory does exist, it causes a weird console error message
   // about "cat: input error on standard input: Is a directory".  So,
   // VxWorks users must create the directory manually.
-  ACE_OS::mkdir (ACE_LOG_DIRECTORY_FOR_MKDIR);
+  // dinhs: Skip creating a directory for now.
+  //ACE_OS::mkdir (ACE_LOG_DIRECTORY_FOR_MKDIR);
 #endif /* ACE_VXWORKS */
 
 # if !defined (ACE_LACKS_IOSTREAM_TOTALLY)
