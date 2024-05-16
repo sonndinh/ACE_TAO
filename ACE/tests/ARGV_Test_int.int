@@ -1,0 +1,14 @@
+Kernel
+	Filename			DynamicDownload
+EndKernel
+
+AddressSpace
+	Name				ARGV_Test
+	Filename			tests/ARGV_Test
+	Language			C++
+	Task Initial
+		StackLength		0x8000
+	EndTask
+EndAddressSpace
+%include "my_ivfsserver_module.int"
+

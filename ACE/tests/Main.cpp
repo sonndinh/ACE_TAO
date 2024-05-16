@@ -11,6 +11,12 @@
 //=============================================================================
 
 #include "ace/OS_main.h"
+#include "ace/Log_Msg.h"
+
+extern "C" {
+  char *shm_area_name = "Example_Area";
+  char *shm_area_password = "******";
+}
 
 int run_main (int argc, ACE_TCHAR *argv[]);
 

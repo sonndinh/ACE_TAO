@@ -2,27 +2,64 @@
 macro ACE_ROOT=%expand_path(.)
 macro __BSP_DIR=${__OS_DIR}\${__BSP_NAME}
 macro __BSP_NAME=sim800
+#macro __BUILD_DIR=${ACE_ROOT}\ace\.shobj
+macro __BUILD_DIR=${ACE_ROOT}\build
 macro __LIBS_DIR_BASE=${__OS_DIR}\libs
 macro __OS_DIR=C:\ghs\int1146
 primaryTarget=ppc_integrity.tgt
 customization=${__OS_DIR}\target\integrity.bod
 [Project]
-	#--one_instantiation_per_object
+	-DACE_HAS_CPP14
+	-gcc
+	--c++14
+	--libcxx
 	:sourceDir=.
-	--std
+	:optionsFile=${__OS_DIR}\target\${__BSP_NAME}.opt
+	# NOTE(dinhs): These options are already included by ${__BSP_NAME}.opt
+	#-I${__OS_DIR}\INTEGRITY-include
+	#-bsp ${__BSP_NAME}
+	#-os_dir ${__OS_DIR}
+	-I${ACE_ROOT}
 	-language=cxx
-	--long_long
 	--new_style_casts
-	-bsp ${__BSP_NAME}
-	-os_dir ${__OS_DIR}
+	-non_shared
 ace/ACE.gpj		[Library]
-	-pic
-	-object_dir=ace/.shobj
-	-Iace/..
-	-Lace/.
-	-L..\lib
-	-liphlpapi
-	-DACE_BUILD_DLL
+	# NOTE(dinhs): We don't really need to specify options here.
+	# The options can all be in the subproject gpj file such as ACE.gpj.
+	# Top level gpj file, i.e. default.gpj, can just list all subprojects gpj files.
+	# Note on include and library paths:
+	# Paths for -I or -L flags are relative to the directory that contains
+	# the current gpj file. For example, we are in default.gpj file which is in
+	# $ACE_ROOT, and the paths will be relative to this base path.
+	# If this was a subproject gpj file, such as ACE.gpj, then the paths will
+	# be relative to the base path of the ACE source code, which is $ACE_ROOT/ace.
+	
+	#-pic
+	#-object_dir=ace/.shobj
+	#-DACE_NO_INLINE
+	#-DACE_HAS_CPP14
+	#-Iace/..
+	#-Lace/.
+	#-L..\lib
+	#-liphlpapi
+	#-DACE_BUILD_DLL
+tests/Test_Output.gpj		[Library]
+	#-pic
+	#-object_dir=tests/.shobj
+	#-Itests/..
+	#-Ltests/.
+	#-L..\lib
+	#-lACE
+	#-liphlpapi
+	#-DTEST_OUTPUT_BUILD_DLL
+tests/ARGV_Test_int.gpj		[INTEGRITY Application]
+	#-object_dir=tests/.obj
+	#-Itests/..
+	#-Ltests/.
+	#-L..\lib
+	#-lTest_Output
+	#-lACE
+	#-liphlpapi
 #ACEXML/common/ACEXML.gpj		[Shared Object]
 #	-pic
 #	-object_dir=ACEXML/common/.shobj

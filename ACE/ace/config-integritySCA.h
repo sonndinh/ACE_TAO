@@ -34,7 +34,7 @@
 
 /***** ANSI defines *****/
 #define ACE_LACKS_TEMPNAM /* believe it or not, this is ANSI C */
-#define ACE_LACKS_PUTENV_PROTOTYPE
+//#define ACE_LACKS_PUTENV_PROTOTYPE
 
 #define ACE_LACKS_SENDMSG
 
@@ -69,7 +69,20 @@
 /****** SYSV_IPC STUFF *****/
 #define ACE_LACKS_KEY_T
 
+#define ACE_HAS_WCHAR
+#define ACE_LACKS_ISCTYPE
+#define ACE_LACKS_WCSICMP
+#define ACE_LACKS_WCSNICMP
+#define ACE_LACKS_WCSDUP
+#define ACE_LACKS_WCSTOK
+#define ACE_LACKS_ALPHASORT
+#define ACE_LACKS_ITOW
+#define ACE_LACKS_STRPTIME
+#define ACE_LACKS_SYSTEM
+
 /****** Posix Defines *****/
+#define ACE_LACKS_SUSECONDS_T
+#define ACE_LACKS_USECONDS_T
 #define ACE_LACKS_WAIT
 #define ACE_LACKS_WAITPID
 #define ACE_HAS_POSIX_TIME

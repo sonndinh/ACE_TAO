@@ -1,0 +1,11 @@
+#!gbuild
+#component integrity_os_modules_file_system_copy
+[Program]
+	-DVFS_NO_MAP
+	-livfsserver
+	-lmsdosfs
+	-lfsck_msdos
+	-lramdisk
+	-lffs
+vfs_main.c
+mounttable.c

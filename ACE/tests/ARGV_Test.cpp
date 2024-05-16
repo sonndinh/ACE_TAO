@@ -263,18 +263,41 @@ test_argv_quotes ()
   return 0;
 }
 
+#include "ace/streams.h"
+#include <string>
+
 int
 run_main (int, ACE_TCHAR *argv[])
 {
   ACE_START_TEST (ACE_TEXT ("ARGV_Test"));
 
+  ACE_DEBUG((LM_ERROR, "---- test_simple_argv....\n"));
   test_simple_argv (argv);
+  ACE_DEBUG((LM_ERROR, "---- test_argv_type_converter2....\n"));
   test_argv_type_converter2 ();
+  ACE_DEBUG((LM_ERROR, "---- test_argv_type_converter....\n"));
   test_argv_type_converter ();
+  ACE_DEBUG((LM_ERROR, "---- test_argv_quotes....\n"));
   test_argv_quotes ();
+  ACE_DEBUG((LM_ERROR, "---- test_argv_buf....\n"));
   test_argv_buf ();
 
   ACE_END_TEST;
+
+  // Try reading from the log file
+#if !defined ACE_TEST_LOG_TO_STDERR
+  const char* filename = "/ARGV_Test.log";
+  ifstream input;
+  input.open(filename, ios::in);
+  if (!input.good()) {
+    ACE_DEBUG((LM_DEBUG, "Failed to open %C to read\n", filename));
+  }
+
+  std::string line;
+  while (std::getline(input, line)) {
+    cout << line << endl;
+  }
+#endif
   return 0;
 }
 
