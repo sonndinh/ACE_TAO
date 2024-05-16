@@ -1,0 +1,9 @@
+AddressSpace				my_ivfsserver_module
+	Filename			my_ivfsserver_module
+	MemoryPoolSize			0x120000
+	Language			C
+	Task				Initial
+		StartIt			true
+	EndTask
+EndAddressSpace
+
