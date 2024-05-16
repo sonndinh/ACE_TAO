@@ -1,8 +1,13 @@
 //  -*- MPC -*-
 project(Test_Output) : acelib, script {
   libout       = .
-  sharedname = Test_Output
-  dynamicflags += TEST_OUTPUT_BUILD_DLL
+
+  specific(ghs) {
+    staticname = Test_Output
+  } else {
+    sharedname = Test_Output
+    dynamicflags += TEST_OUTPUT_BUILD_DLL
+  }
   Source_Files {
     Test_Output.cpp
   }
@@ -166,7 +171,7 @@ project(Array Map Test) : acetest {
   }
 }
 
-project(ARGV Test) : acetest {
+project(ARGV Test) : acetest, ghs_acetest {
   exename = ARGV_Test
   Source_Files {
     ARGV_Test.cpp
