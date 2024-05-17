@@ -1,25 +1,24 @@
 #!gbuild
 #primaryTarget=ppc_integrity.tgt
-	[Program]
-	#-DACE_TEST_LOG_TO_STDERR
+[Program]
 	-o tests/ARGV_Test
+	-non_shared
 	-Ospeed
 	-OI
 	--exceptions
-	-I.
+	-I$(ACE_ROOT)
 	-L.
-	-L..\lib
-	-L${__BUILD_DIR}/tests
-	-L${__BUILD_DIR}/lib
-	-lTest_Output
-	-lACE
+	-L$(ACE_ROOT)\lib
+	-L${__BUILD_DIR}\lib
+	-L${__BUILD_DIR}\tests
 	-lposix
-	#-lposix_sys_client
 	-livfs
 	-lshm_client
 	-lsocket
 	-lnet
-	#-liphlpapi
+	-lTest_Output
+	-lACE
+	-DACE_AS_STATIC_LIBS
 acetest.mpb		[Text]
 tests.mpc		[Text]
 tests.mwc		[Text]

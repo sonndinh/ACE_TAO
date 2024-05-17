@@ -4,7 +4,6 @@ project(ACE) : ace_output, acedefaults, install, other, codecs, token, svcconf, 
 
   specific(ghs) {
     staticname = ACE
-    staticflags += ACE_HAS_CPP14
   } else {
     sharedname   = ACE
     dynamicflags += ACE_BUILD_DLL

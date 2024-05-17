@@ -1,6 +1,12 @@
 //  -*- MPC -*-
 project(Test_Output) : acelib, script {
-  libout       = .
+  specific(ghs) {
+    // This will place the library to ${__BUILD_DIR}/tests where __BUILD_DIR is
+    // a macro in the top-project gpj file specifying the build directory.
+    libout = tests
+  } else {
+    libout = .
+  }
 
   specific(ghs) {
     staticname = Test_Output

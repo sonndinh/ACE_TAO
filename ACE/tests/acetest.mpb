@@ -1,5 +1,11 @@
 // -*- MPC -*-
 project : aceexe {
+  specific(ghs) {
+    // Place the test executables in ${__BUILD_DIR}/tests
+    exeout = tests
+  } else {
+    exeout = .
+  }
 
   after += Test_Output
   libs  += Test_Output

@@ -1,13 +1,14 @@
 #!gbuild
 #primaryTarget=ppc_integrity.tgt
 [Library]
+	-o lib/libACE.a
 	-Ospeed
 	-OI
 	--exceptions
-	-L..\lib
-	-liphlpapi
-	#-DACE_BUILD_DLL
-	-o lib/libACE.a
+	-I$(ACE_ROOT)
+	-L.
+	-L$(ACE_ROOT)\lib
+	-DACE_AS_STATIC_LIBS
 ace.mpc		[Text]
 ace.mwc		[Text]
 ace_for_tao.mpc		[Text]
@@ -25,12 +26,16 @@ uuid.mpb		[Text]
 ..\\README		[Text]
 ..\\THANKS		[Text]
 ..\\VERSION.txt		[Text]
+..\\bin\\DependencyGenerator		[Text]
+..\\bin\\MakeProjectCreator		[Text]
 ..\\bin\\ace_install_pkgconfig.pl		[Text]
 ..\\bin\\add_rel_link.sh		[Text]
 ..\\bin\\depgen.pl		[Text]
 ..\\bin\\generate_export_file.pl		[Text]
 ..\\bin\\mpc.pl		[Text]
 ..\\bin\\mwc.pl		[Text]
+..\\docs		[Text]
+..\\include\\makeinclude		[Text]
 ACE.pc.in		[Text]
 ACE.cpp
 ACE_crc32.cpp
