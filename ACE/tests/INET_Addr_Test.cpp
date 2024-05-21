@@ -61,14 +61,24 @@ static bool test_tao_use ()
                   ACE_TEXT ("gethostname")));
       return false;
     }
+  ACE_DEBUG((LM_DEBUG, "test_tao_use: gethostname returns: %C\n", host));
 
   ACE_INET_Addr addr;
-  addr.set ((unsigned short)0, host);
+  //addr.set ((unsigned short)0, host);
+  if (addr.set ((unsigned short)0, host) != 0) {
+    ACE_DEBUG((LM_DEBUG, "test_tao_use: set to 'host' addr %C failed\n", host));
+  }
+
+  ACE_DEBUG((LM_DEBUG, "test_tao_use: Port number set to: %d\n", addr.get_port_number()));
 
   ACE_CString full (host);
   full += ":12345";
+  ACE_DEBUG((LM_DEBUG, "test_tao_use: 'full' hostname is: %C\n", full.c_str()));
 
-  addr.set (full.c_str ());
+  //addr.set (full.c_str ());
+  if (addr.set(full.c_str()) != 0) {
+    ACE_DEBUG((LM_DEBUG, "test_tao_use: set to 'full' addr failed\n"));
+  }
 
   u_short p = addr.get_port_number ();
 
@@ -195,7 +205,7 @@ static bool test_port_names()
   return success;
 }
 
-struct Address {
+struct MyAddress {
   const char* name;
   bool loopback;
 };
@@ -545,7 +555,7 @@ int run_main (int, ACE_TCHAR *[])
   ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("ACE_HAS_IPV6 not set; no IPv6 tests run\n")));
 #endif
 
-  struct Address loopback_addresses[] =
+  struct MyAddress loopback_addresses[] =
     { {"127.0.0.1", true}, {"127.1.2.3", true}
       , {"127.0.0.0", true}, {"127.255.255.255", true}
       , {"126.255.255.255", false}, {"128.0.0.0", false}, {0, true}

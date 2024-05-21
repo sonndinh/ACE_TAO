@@ -177,7 +177,7 @@ project(Array Map Test) : acetest {
   }
 }
 
-project(ARGV Test) : acetest, ghs_acetest {
+project(ARGV Test) : acetest {
   exename = ARGV_Test
   Source_Files {
     ARGV_Test.cpp

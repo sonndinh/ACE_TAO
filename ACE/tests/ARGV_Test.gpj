@@ -19,6 +19,7 @@
 	-lTest_Output
 	-lACE
 	-DACE_AS_STATIC_LIBS
+	-DACE_TEST_LOG_TO_STDERR
 acetest.mpb		[Text]
 tests.mpc		[Text]
 tests.mwc		[Text]

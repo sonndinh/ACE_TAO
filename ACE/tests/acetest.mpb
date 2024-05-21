@@ -1,14 +1,23 @@
 // -*- MPC -*-
 project : aceexe {
+  after += Test_Output
+  libs  += Test_Output
+
   specific(ghs) {
-    // Place the test executables in ${__BUILD_DIR}/tests
+    // The test executables and libraries are placed in ${__BUILD_DIR}/tests
     exeout = tests
+    libpaths += ${__BUILD_DIR}/lib ${__BUILD_DIR}/tests
+
+    // Common libraries that tests use to run on Green Hills INTEGRITY
+    libs += posix ivfs shm_client socket net
+
+    // By default, write logs to stderr.
+    // Delete this will require setting up a File system server in the same
+    // Dynamic Download application as the test itself.
+    staticflags += ACE_TEST_LOG_TO_STDERR
   } else {
     exeout = .
   }
-
-  after += Test_Output
-  libs  += Test_Output
 
   Source_Files {
     Main.cpp

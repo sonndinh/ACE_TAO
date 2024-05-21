@@ -1,7 +1,0 @@
-// -*- MPC -*-
-project {
-  specific(ghs) {
-    libpaths += ${__BUILD_DIR}/lib ${__BUILD_DIR}/tests
-    libs += posix ivfs shm_client socket net
-  }
-}

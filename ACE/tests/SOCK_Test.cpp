@@ -31,7 +31,10 @@ void *
 client (void *arg)
 {
   ACE_INET_Addr *remote_addr = (ACE_INET_Addr *) arg;
-  ACE_INET_Addr server_addr (remote_addr->get_port_number (), ACE_LOCALHOST);
+  // NOTE(sonndinh): Name resolution doesn't work properly when running test on INTEGRITY Simulator.
+  // As a fix, just use a localhost IP address for now.
+  //ACE_INET_Addr server_addr (remote_addr->get_port_number (), ACE_LOCALHOST);
+  ACE_INET_Addr server_addr (remote_addr->get_port_number (), "127.0.0.1");
   ACE_SOCK_Stream cli_stream;
   ACE_SOCK_Connector con;
 
@@ -195,6 +198,15 @@ spawn ()
     {
       ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("(%P|%t) starting server at port %d\n"),
                   server_addr.get_port_number ()));
+      // sonndinh: start
+      //char buff[128];
+      //if (server_addr.addr_to_string(buff, 128) != 0) {
+      //  ACE_DEBUG((LM_DEBUG, "spawn: addr_to_string failed\n"));
+      //}
+      //buff[127] = '\0';
+      //ACE_DEBUG((LM_DEBUG, "spawn: Server address is %C\n", buff));
+      // sonndinh: end
+
 
 #if !defined (ACE_LACKS_FORK)
       switch (ACE_OS::fork (ACE_TEXT ("child")))
@@ -255,5 +267,30 @@ run_main (int, ACE_TCHAR *[])
 #endif
 
   ACE_END_TEST;
+
+  // sonndinh: start
+  // Log messages from spawned client and server thread don't get printed out to stderr.
+  // But they can be logged to a log file.
+  // This tries to print the contents of the log file for checking.
+  /*
+#include "ace/streams.h"
+#include <string>
+
+  // Try reading from the log file
+#if !defined ACE_TEST_LOG_TO_STDERR
+  const char* filename = "/SOCK_Test.log";
+  ifstream input;
+  input.open(filename, ios::in);
+  if (!input.good()) {
+    ACE_DEBUG((LM_DEBUG, "Failed to open %C to read\n", filename));
+  }
+  std::string line;
+  while (std::getline(input, line)) {
+    cout << line << endl;
+  }
+#endif
+  */
+  // sonndinh: end
+
   return 0;
 }
