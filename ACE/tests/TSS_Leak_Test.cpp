@@ -16,9 +16,9 @@ int X::count_;
 
 ACE_Barrier barrier (2);
 
-struct Task : ACE_Task_Base
+struct MyTask : ACE_Task_Base
 {
-  explicit Task (ACE_TSS<X> *tss) : tss_(tss) {}
+  explicit MyTask (ACE_TSS<X> *tss) : tss_(tss) {}
 
   int svc () override
   {
@@ -41,7 +41,7 @@ int run_main (int, ACE_TCHAR *[])
   ACE_TSS<X> *const tss = new ACE_TSS<X>;
   X *x = *tss;
   ACE_UNUSED_ARG (x);
-  Task task (tss);
+  MyTask task (tss);
   task.activate ();
   barrier.wait ();
   delete tss;

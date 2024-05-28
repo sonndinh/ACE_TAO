@@ -26,6 +26,13 @@ void report_error (const ACE_TCHAR *lock)
 using Singleton1 = ACE_Singleton<int, ACE_MT_SYNCH::MUTEX>;
 using Singleton2 = ACE_Singleton<int, ACE_MT_SYNCH::RECURSIVE_MUTEX>;
 
+#if defined (ghs)
+extern "C" {
+  char *shm_area_name = const_cast<char*>("Example_Area");
+  char *shm_area_password = const_cast<char*>("******");
+}
+#endif
+
 int main ()
 {
   ACE::init ();

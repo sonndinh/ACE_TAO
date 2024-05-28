@@ -1644,6 +1644,12 @@ project(Singleton Restart Test) : aceexe {
   exename = Singleton_Restart_Test
   after += Test_Output
   libs += Test_Output
+  specific(ghs) {
+    exeout = tests
+    libpaths += ${__BUILD_DIR}/lib ${__BUILD_DIR}/tests
+    libs += posix ivfs shm_client socket net
+    staticflags += ACE_TEST_LOG_TO_STDERR
+  }
   Source_Files {
     Singleton_Restart_Test.cpp
   }
@@ -2208,6 +2214,10 @@ project(Based Pointer Test) : acetest {
 project(Library Unload): unload_libace {
   exename = UnloadLibACE
   staticflags += ACE_AS_STATIC_LIBS
+  specific(ghs) {
+    exeout = tests
+    libs += ivfs
+  }
   Source_Files {
     Unload_libACE.cpp
   }
