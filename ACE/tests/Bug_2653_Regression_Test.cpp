@@ -27,7 +27,7 @@
 static const char *message =
 "Hello there! Hope you get this message";
 
-class Watchdog : public ACE_Task_Base
+class MyWatchdog : public ACE_Task_Base
 {
 public:
   int svc () override;
@@ -35,14 +35,14 @@ public:
 };
 
 int
-Watchdog::svc ()
+MyWatchdog::svc ()
 {
   ACE_OS::sleep (5);
   // If we make it through the sleep and haven't been canceled, that
   // means the process is hung.
   if (!this->thr_mgr ()->testcancel (ACE_Thread::self ()))
     ACE_ERROR ((LM_ERROR,
-                ACE_TEXT ("Watchdog slept without cancel - we're hung\n")));
+                ACE_TEXT ("MyWatchdog slept without cancel - we're hung\n")));
   return 0;
 }
 
@@ -211,7 +211,7 @@ run_main (int, ACE_TCHAR *[])
   ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("Testing for crash\n")));
   test_for_crash (tp_reactor);
   // if that passes, start the watchdog. We don't need to wait
-  Watchdog wd;
+  MyWatchdog wd;
   wd.activate ();
   ACE_DEBUG ((LM_DEBUG, ACE_TEXT ("Testing for spin\n")));
   test_for_spin(tp_reactor);

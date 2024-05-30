@@ -64,7 +64,7 @@ static int opt_select_reactor = 1;
 static ACE_MEM_IO::Signal_Strategy client_strategy = ACE_MEM_IO::Reactive;
 
 using WaitingCounter = ACE_Atomic_Op<ACE_MT_SYNCH::MUTEX, u_short>;
-using Waiting = ACE_Singleton<WaitingCounter, ACE_MT_SYNCH::RECURSIVE_MUTEX>;
+using MyWaiting = ACE_Singleton<WaitingCounter, ACE_MT_SYNCH::RECURSIVE_MUTEX>;
 
 // Number of connections that are currently open
 static u_short connection_count = 0;
@@ -75,7 +75,7 @@ using S_ACCEPTOR = ACE_Strategy_Acceptor<Echo_Handler, ACE_MEM_Acceptor>;
 void reset_handler (int conn)
 {
   // Reset the number of connection the test should perform.
-  *Waiting::instance () = conn;
+  *MyWaiting::instance () = conn;
   connection_count = 0;
 }
 
@@ -131,14 +131,14 @@ Echo_Handler::handle_close (ACE_HANDLE,
                             ACE_Reactor_Mask mask)
 {
   // Reduce count.
-  (*Waiting::instance ())--;
+  (*MyWaiting::instance ())--;
 
   if (client_strategy != ACE_MEM_IO::Reactive)
     this->reactor ()->remove_handler (this,
                                       mask | ACE_Event_Handler::DONT_CALL);
 
   // If no connections are open.
-  if (*Waiting::instance () == 0)
+  if (*MyWaiting::instance () == 0)
     ACE_Reactor::instance ()->end_reactor_event_loop ();
 
   ACE_DEBUG ((LM_DEBUG,

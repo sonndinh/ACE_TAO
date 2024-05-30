@@ -13,10 +13,12 @@
 #include "ace/OS_main.h"
 #include "ace/Log_Msg.h"
 
+#if defined (ghs)
 extern "C" {
-  char *shm_area_name = "Example_Area";
-  char *shm_area_password = "******";
+  char *shm_area_name = const_cast<char*>("Example_Area");
+  char *shm_area_password = const_cast<char*>("******");
 }
+#endif
 
 int run_main (int argc, ACE_TCHAR *argv[]);
 
