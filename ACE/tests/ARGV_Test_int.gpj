@@ -1,4 +1,0 @@
-#!gbuild
-	[INTEGRITY Application]
-tests/ARGV_Test.gpj		[Program]
-tests/ARGV_Test_int.int
