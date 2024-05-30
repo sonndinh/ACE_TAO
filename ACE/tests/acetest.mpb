@@ -6,7 +6,7 @@ project : aceexe {
   specific(ghs) {
     // The test executables and libraries are placed in ${__BUILD_DIR}/tests
     exeout = tests
-    libpaths += ${__BUILD_DIR}/lib ${__BUILD_DIR}/tests
+    libpaths += ${__BUILD_DIR}/tests
 
     // Common libraries that tests use to run on Green Hills INTEGRITY
     libs += posix ivfs shm_client socket net

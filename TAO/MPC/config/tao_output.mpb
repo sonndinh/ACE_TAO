@@ -1,7 +1,13 @@
 // -*- MPC -*-
 project {
-  // We tested with all tao libs going to $(TAO_ROOT)/lib, but
-  // decided that it was easier to deal with all libs in one place.
-  libout = $(ACE_ROOT)/lib
+  specific(ghs) {
+    // Put TAO libs in the same place as ACE libs.
+    // That is, they are all under ${__BUILD_DIR}/lib.
+    libout = lib
+  } else {
+    // We tested with all tao libs going to $(TAO_ROOT)/lib, but
+    // decided that it was easier to deal with all libs in one place.
+    libout = $(ACE_ROOT)/lib
+  }
 }
 
