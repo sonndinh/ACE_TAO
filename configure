@@ -1,0 +1,166 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+use FileHandle;
+use Cwd;
+use lib "/Users/sonndinh/Codes/OpenDDS/tools/scripts/modules";
+use command_utils;
+
+# Assuming we are in the ACE_TAO directory which has both ACE and TAO source tree.
+# User can specify the path to MPC using the command-line option,
+# or set the MPC_ROOT environment variable.
+
+# Command-line options:
+# mpc
+# verbose
+my %opts;
+
+my %hostEnv = ('build' => 'host');
+my %targetEnv = ('build' => 'target');
+
+$opts{'host'} = perlOS_to_host() unless $opts{'host'};
+
+my $is_windows = $opts{'host'} eq 'win32';
+my ($slash, $exeext) = $is_windows ? ('\\', '.exe') : ('/', '');
+
+my %specific =
+  ($is_windows ?
+   ('ext' => 'cmd', 'pathsep' => ';', 'refpre' => '%',
+    'refpost' => '%', 'comment' => '::') :
+   ('ext' => 'sh', 'pathsep' => ':', 'refpre' => '${',
+    'refpost' => '}', 'comment' => '#')
+  );
+
+sub perlOS_to_host {
+  return 'win32' if $^O eq 'MSWin32';
+  return 'macos' if $^O eq 'darwin';
+  return $^O;
+}
+
+sub setSomeEnv {
+  my($hashref, $name, $val) = @_;
+  $val = Cwd::abs_path($val) if -d $val;
+  $val =~ s!/!\\!g if $is_windows;
+  $hashref->{$name} = $val;
+}
+
+sub setEnv {
+  setSomeEnv(\%targetEnv, @_);
+}
+
+sub setHostEnv {
+  setSomeEnv(\%hostEnv, @_);
+}
+
+sub locate_mpc {
+  if (defined $opts{'mpc'}) {
+    setEnv('MPC_ROOT', $opts{'mpc'});
+  }
+  elsif ($ENV{'MPC_ROOT'}) {
+    setEnv('MPC_ROOT', $ENV{'MPC_ROOT'});
+  }
+  else {
+    die "ERROR: Can't find MPC.  Please pass the path to MPC as a command-line".
+        " option or set the MPC_ROOT environment variable, stopped";
+  }
+  setHostEnv('MPC_ROOT', $targetEnv{'MPC_ROOT'});
+}
+
+sub run_command {
+  my $command = shift;
+  return command_utils::run_command(
+    $command,
+    script_name => 'configure',
+    dry_run => $opts{'dry-run'},
+    verbose => $opts{'verbose'},
+    @_,
+  );
+}
+
+sub clone_host_and_target {
+  my $source_dir = '.';
+  locate_mpc();
+  print "cloning build tree\n" if $opts{'verbose'};
+  if (run_command(
+      ["$targetEnv{'MPC_ROOT'}/clone_build_tree.pl", 'host', 'target'],
+      chdir => $source_dir)) {
+    die("Failed to clone tree");
+  }
+}
+
+sub write_host_workspace {
+  my %buildEnv = %{shift()};
+  my $file = "$buildEnv{'ACE_ROOT'}" . '/host_tools.mwc';
+  my $MWC = new FileHandle;
+  open $MWC, ">$file" or die "ERROR: Can't write to $file, stopped";
+  print $MWC <<'EOT';
+workspace {
+  $(ACE_ROOT)/ace/ace.mpc
+  $(ACE_ROOT)/apps/gperf/src
+  $(TAO_ROOT)/TAO_IDL
+  $(TAO_ROOT)/tao/tao.mpc
+}
+EOT
+  $MWC->close;
+  print "Wrote host_tools.mwc in $buildEnv{'ACE_ROOT'}\n" if $opts{'verbose'};
+}
+
+#$hostEnv{'ACE_ROOT'} = ;
+#$hostEnv{'TAO_ROOT'} = ;
+setHostEnv('ACE_ROOT', 'build/host/ACE');
+setHostEnv('TAO_ROOT', 'build/host/TAO');
+
+#push_path(\%targetEnv, $hostEnv{'ACE_ROOT'} . $slash . 'bin');
+
+sub mergeToEnv {
+  my $buildEnv = shift;
+  for my $k (keys %{$buildEnv}) {
+    next if $k eq 'build';
+    if ($buildEnv->{$k} =~
+        /^\Q$specific{'refpre'}\E$k\Q$specific{'refpost'}\E(.*)/) {
+      if ($1 ne '') {
+        $ENV{$k} .= $1;
+        print "ENV: Appending $1 to $k\n" if $opts{'verbose'};
+      }
+    }
+    else {
+      $ENV{$k} = $buildEnv->{$k};
+      print "ENV: Setting $k to $buildEnv->{$k}\n" if $opts{'verbose'};
+    }
+  }
+}
+
+sub generate_workspace {
+  my $buildEnv = shift;
+  my %savedEnv = %ENV;
+  print "ENV: saving current environment\n" if $opts{'verbose'};
+  mergeToEnv($buildEnv);
+
+  # TODO(sonndinh): Make it more general. For now, assuming Windows host.
+  my @mwc_common_args = ('-type', 'vs2019');
+  my @mwc = ('perl', "$ENV{ACE_ROOT}/bin/mwc.pl");
+  print "Running MPC to generate project files\n";
+  if (run_command([@mwc, @mwc_common_args, "$buildEnv->{'ACE_ROOT'}/host_tools.mwc"])) {
+    die "ERROR: Error from MPC, stopped";
+  }
+
+  %ENV = %savedEnv;
+  print "ENV: restoring previous environment\n" if $opts{'verbose'};
+}
+
+sub configure_build {
+  my $buildEnvRef = shift;
+  if (-r "$buildEnvRef->{ACE_ROOT}/ace/config.h") {
+    print "ACE_ROOT/ace/config.h exists, skipping configuration of ACE+TAO\n";
+  } else {
+    # TODO(sonndinh): Create config.h, default.features, platform_macros here.
+    # For now, create config.h manually for testing.
+  }
+  generate_workspace($buildEnvRef);
+}
+
+#clone_host_and_target();
+write_host_workspace(\%hostEnv);
+configure_build(\%hostEnv);
