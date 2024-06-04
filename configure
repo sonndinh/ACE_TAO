@@ -107,13 +107,6 @@ EOT
   print "Wrote host_tools.mwc in $buildEnv{'ACE_ROOT'}\n" if $opts{'verbose'};
 }
 
-#$hostEnv{'ACE_ROOT'} = ;
-#$hostEnv{'TAO_ROOT'} = ;
-setHostEnv('ACE_ROOT', 'build/host/ACE');
-setHostEnv('TAO_ROOT', 'build/host/TAO');
-
-#push_path(\%targetEnv, $hostEnv{'ACE_ROOT'} . $slash . 'bin');
-
 sub mergeToEnv {
   my $buildEnv = shift;
   for my $k (keys %{$buildEnv}) {
@@ -139,7 +132,7 @@ sub generate_workspace {
   mergeToEnv($buildEnv);
 
   # TODO(sonndinh): Make it more general. For now, assuming Windows host.
-  my @mwc_common_args = ('-type', 'vs2019');
+  my @mwc_common_args = ('-type', 'vs2022');
   my @mwc = ('perl', "$ENV{ACE_ROOT}/bin/mwc.pl");
   print "Running MPC to generate project files\n";
   if (run_command([@mwc, @mwc_common_args, "$buildEnv->{'ACE_ROOT'}/host_tools.mwc"])) {
@@ -161,6 +154,68 @@ sub configure_build {
   generate_workspace($buildEnvRef);
 }
 
+# Attempt to create host and target directories with symlinks to the
+# original source tree. But this apparently doesn't work on Windows.
 #clone_host_and_target();
+#setHostEnv('ACE_ROOT', 'build/host/ACE');
+#setHostEnv('TAO_ROOT', 'build/host/TAO');
+#write_host_workspace(\%hostEnv);
+#configure_build(\%hostEnv);
+
+sub git_clone {
+  my $dest = shift;
+  my $url = shift;
+  my %args = @_;
+  my $branch = $args{branch};
+  my $commit = $args{commit};
+
+  print "Cloning git repo $url ", $branch // $commit, "\n";
+
+  my $failed;
+  if (defined($commit)) {
+    # Git can't directly clone a specific commit. Could use clone and checkout,
+    # but can't do a single shallow clone that way.
+    my $chdir = ChangeDir->new($dest);
+    $failed = run_command(['git', 'init', '--quiet']) ||
+      run_command(['git', 'remote', 'add', 'origin', $url]) ||
+      run_command(['git', 'fetch', '--quiet', '--depth=1', 'origin', $commit]) ||
+      run_command(['git', 'checkout', '--quiet', 'FETCH_HEAD']);
+  }
+  else {
+    my @cmd = ('git', 'clone', '--quiet', '--depth=1', $url, $dest);
+    push(@cmd, '--branch', $branch) if (defined($branch));
+    $failed = run_command(\@cmd);
+  }
+
+  if (!$failed) {
+    run_command(['git', '--no-pager', 'log', '-1', '--oneline'], chdir => $dest);
+  }
+  return $failed;
+}
+
+sub create_host_tools_clone {
+  my $host_dir = shift;
+  if (! -d $host_dir) {
+    die "ERROR: Failed to create '$host_dir' directory" if (!mkdir($host_dir));
+  }
+
+  my $urlbase = 'https://github.com/sonndinh';
+  my $branch = 'ghs-integrity-porting';
+  my $err = git_clone("$host_dir/ACE_TAO", "$urlbase/ACE_TAO", branch => $branch);
+  die "ERROR: Failed to clone ACE/TAO from GitHub, stopped"
+    if $err || ! -r "$host_dir/ACE_TAO/ACE/ace/ACE.h" || ! -r "$host_dir/ACE_TAO/TAO/tao/ORB.h";
+}
+
+# Instead, create another clone and use it to build host tool.
+# The original clone is used to build target.
+my $host_tools_dir = "host";
+
+if (! -r "$host_tools_dir/ACE_TAO/ACE/ace/ACE.h") {
+  create_host_tools_clone($host_tools_dir);
+}
+
+setHostEnv('ACE_ROOT', 'host/ACE_TAO/ACE');
+setHostEnv('TAO_ROOT', 'host/ACE_TAO/TAO');
+
 write_host_workspace(\%hostEnv);
 configure_build(\%hostEnv);
