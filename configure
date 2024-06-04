@@ -5,7 +5,8 @@ use warnings;
 
 use FileHandle;
 use Cwd;
-use lib "/Users/sonndinh/Codes/OpenDDS/tools/scripts/modules";
+#use lib "/Users/sonndinh/Codes/OpenDDS/tools/scripts/modules";
+use lib 'C:\Users\Son Dinh\leonardo-drs\with_tao\OpenDDS\tools\scripts\modules';
 use command_utils;
 
 # Assuming we are in the ACE_TAO directory which has both ACE and TAO source tree.
