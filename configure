@@ -5,24 +5,33 @@ use warnings;
 
 use FileHandle;
 use Cwd;
-#use lib "/Users/sonndinh/Codes/OpenDDS/tools/scripts/modules";
-use lib 'C:\Users\Son Dinh\leonardo-drs\with_tao\OpenDDS\tools\scripts\modules';
+use FindBin;
+use lib "$FindBin::RealBin/scripts";
 use command_utils;
 
-# Assuming we are in the ACE_TAO directory which has both ACE and TAO source tree.
-# User can specify the path to MPC using the command-line option,
-# or set the MPC_ROOT environment variable.
+# TODO(sonndinh): Most of these work only with a Windows host.
+# However, a Linux host can also be used.
 
+# TODO(sonndinh): MPC, ACE, TAO can be downloaded or existing
+# paths for them can be passed to the command-line options.
 # Command-line options:
 # mpc
+# ace
+# tao
 # verbose
-my %opts;
+
+my %opts; # = %{parseArgs()};
 
 my %hostEnv = ('build' => 'host');
 my %targetEnv = ('build' => 'target');
 
-$opts{'host'} = perlOS_to_host() unless $opts{'host'};
+sub perlOS_to_host {
+  return 'win32' if $^O eq 'MSWin32';
+  return 'macos' if $^O eq 'darwin';
+  return $^O;
+}
 
+$opts{'host'} = perlOS_to_host() unless $opts{'host'};
 my $is_windows = $opts{'host'} eq 'win32';
 my ($slash, $exeext) = $is_windows ? ('\\', '.exe') : ('/', '');
 
@@ -33,12 +42,6 @@ my %specific =
    ('ext' => 'sh', 'pathsep' => ':', 'refpre' => '${',
     'refpost' => '}', 'comment' => '#')
   );
-
-sub perlOS_to_host {
-  return 'win32' if $^O eq 'MSWin32';
-  return 'macos' if $^O eq 'darwin';
-  return $^O;
-}
 
 sub setSomeEnv {
   my($hashref, $name, $val) = @_;
@@ -63,8 +66,13 @@ sub locate_mpc {
     setEnv('MPC_ROOT', $ENV{'MPC_ROOT'});
   }
   else {
-    die "ERROR: Can't find MPC.  Please pass the path to MPC as a command-line".
-        " option or set the MPC_ROOT environment variable, stopped";
+    if (! -r 'MPC/mwc.pl') {
+      my $branch = "ghs-update";
+      my $err = git_clone('./MPC', "https://github.com/sonndinh/MPC", branch => $branch);
+      die "ERROR: Failed to clone MPC from GitHub, stopped"
+        if $err || ! -r 'MPC/mwc.pl';
+    }
+    setEnv('MPC_ROOT', './MPC');
   }
   setHostEnv('MPC_ROOT', $targetEnv{'MPC_ROOT'});
 }
@@ -126,22 +134,73 @@ sub mergeToEnv {
   }
 }
 
+sub write_config_h {
+  my %buildEnv = %{shift()};
+  my $cfg_file = $buildEnv{'ACE_ROOT'} . '/ace/config.h';
+  my $cfg_fh = new FileHandle;
+  open $cfg_fh, ">$cfg_file" or die "ERROR: Can't write to $cfg_file, stopped";
+  if ($buildEnv{'build'} eq 'host') {
+    print $cfg_fh "#include \"ace/config-windows.h\"\n";
+  } else {
+    print $cfg_fh "#include \"ace/config-integritySCA.h\"\n";
+  }
+  close $cfg_fh;
+  print "Wrote $buildEnv{'ACE_ROOT'}/ace/config.h\n" if $opts{'verbose'};
+}
+
 sub generate_workspace {
   my $buildEnv = shift;
   my %savedEnv = %ENV;
   print "ENV: saving current environment\n" if $opts{'verbose'};
   mergeToEnv($buildEnv);
 
-  # TODO(sonndinh): Make it more general. For now, assuming Windows host.
-  my @mwc_common_args = ('-type', 'vs2022');
+  my @mwc_common_args;
+  if ($buildEnv->{'build'} eq 'host') {
+    @mwc_common_args = ('-type', 'vs2022');
+  } else {
+    @mwc_common_args = ('-type', 'ghs');
+  }
+
   my @mwc = ('perl', "$ENV{ACE_ROOT}/bin/mwc.pl");
   print "Running MPC to generate project files\n";
-  if (run_command([@mwc, @mwc_common_args, "$buildEnv->{'ACE_ROOT'}/host_tools.mwc"])) {
-    die "ERROR: Error from MPC, stopped";
+
+  if ($buildEnv->{'build'} eq 'host') {
+    if (run_command([@mwc, @mwc_common_args, "$buildEnv->{'ACE_ROOT'}/host_tools.mwc"])) {
+      die "ERROR: Error from MPC, stopped";
+    }
+  } else {
+    if (run_command([@mwc, @mwc_common_args, "$buildEnv->{'TAO_ROOT'}/TAO_ACE.mwc"])) {
+      die "ERROR: Error from MPC, stopped";
+    }
   }
 
   %ENV = %savedEnv;
   print "ENV: restoring previous environment\n" if $opts{'verbose'};
+}
+
+sub write_environment {
+  my %buildEnv = %{shift()};
+  my $dir = shift;
+  my $se_file = $dir . '/setenv.' . $specific{'ext'};
+  my $se_fh = new FileHandle;
+  open $se_fh, ">$se_file" or die "ERROR: Can't write to $se_file, stopped";
+
+  for my $key (sort(keys(%buildEnv))) {
+    if ($key ne 'build' && $key ne 'mpctype') {
+      my $value = $buildEnv{$key};
+      $value =~ s/^"(.*)"$/$1/g;
+      if ($is_windows) {
+        print $se_fh "set \"$key=$value\"\n";
+      } else {
+        my $posix_value = $value;
+        $posix_value =~ s/"/\\"/g;
+        print $se_fh "export $key=\"$posix_value\"\n";
+      }
+    }
+  }
+
+  $se_fh->close;
+  print "Wrote $dir/setenv.$specific{'ext'}\n" if $opts{'verbose'};
 }
 
 sub configure_build {
@@ -149,10 +208,11 @@ sub configure_build {
   if (-r "$buildEnvRef->{ACE_ROOT}/ace/config.h") {
     print "ACE_ROOT/ace/config.h exists, skipping configuration of ACE+TAO\n";
   } else {
-    # TODO(sonndinh): Create config.h, default.features, platform_macros here.
-    # For now, create config.h manually for testing.
+    # TODO(sonndinh): Create default.features, platform_macros here.
+    write_config_h($buildEnvRef);
   }
   generate_workspace($buildEnvRef);
+  write_environment($buildEnvRef, $buildEnvRef->{'ACE_ROOT'});
 }
 
 # Attempt to create host and target directories with symlinks to the
@@ -207,16 +267,55 @@ sub create_host_tools_clone {
     if $err || ! -r "$host_dir/ACE_TAO/ACE/ace/ACE.h" || ! -r "$host_dir/ACE_TAO/TAO/tao/ORB.h";
 }
 
-# Instead, create another clone and use it to build host tool.
+sub push_env_dir {
+  my ($buildEnvRef, $var, $path) = @_;
+  if (exists $buildEnvRef->{$var}) {
+    $buildEnvRef->{$var} .= $specific{'pathsep'} . $path;
+  }
+  else {
+    $buildEnvRef->{$var} = $path;
+  }
+}
+
+sub push_path {
+  my ($buildEnvRef, $path) = @_;
+  push_env_dir($buildEnvRef, 'PATH', $path);
+}
+
+sub push_libpath {
+  my ($buildEnvRef, $path) = @_;
+  # Windows uses PATH for libraries.
+  push_env_dir($buildEnvRef, 'PATH', $path);
+}
+
+locate_mpc();
+
+# Create another clone and use it to build host tool.
 # The original clone is used to build target.
 my $host_tools_dir = "host";
-
 if (! -r "$host_tools_dir/ACE_TAO/ACE/ace/ACE.h") {
   create_host_tools_clone($host_tools_dir);
 }
 
-setHostEnv('ACE_ROOT', 'host/ACE_TAO/ACE');
-setHostEnv('TAO_ROOT', 'host/ACE_TAO/TAO');
+setHostEnv('ACE_ROOT', "$host_tools_dir/ACE_TAO/ACE");
+setHostEnv('TAO_ROOT', "$host_tools_dir/ACE_TAO/TAO");
 
-write_host_workspace(\%hostEnv);
-configure_build(\%hostEnv);
+print "Cross-compile configuring host\n";
+
+if (! -r "$host_tools_dir/ACE_TAO/ACE/host_tools.mwc") {
+  write_host_workspace(\%hostEnv);
+}
+
+#configure_build(\%hostEnv);
+
+print "Cross-compile configuring target\n";
+
+setEnv('HOST_ACE', "$host_tools_dir/ACE_TAO/ACE");
+setEnv('ACE_ROOT', './ACE');
+setEnv('TAO_ROOT', './TAO');
+
+push_path(\%targetEnv, $hostEnv{'ACE_ROOT'} . $slash . 'bin');
+push_libpath(\%targetEnv, $hostEnv{'ACE_ROOT'} . $slash . 'lib');
+
+print %targetEnv;
+configure_build(\%targetEnv);
