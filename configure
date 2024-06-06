@@ -22,9 +22,6 @@ use command_utils;
 
 my %opts; # = %{parseArgs()};
 
-my %hostEnv = ('build' => 'host');
-my %targetEnv = ('build' => 'target');
-
 sub perlOS_to_host {
   return 'win32' if $^O eq 'MSWin32';
   return 'macos' if $^O eq 'darwin';
@@ -42,6 +39,10 @@ my %specific =
    ('ext' => 'sh', 'pathsep' => ':', 'refpre' => '${',
     'refpost' => '}', 'comment' => '#')
   );
+
+my $curpathRef = $specific{'refpre'} . 'PATH' . $specific{'refpost'};
+my %hostEnv = ('build' => 'host', 'PATH' => $curpathRef);
+my %targetEnv = ('build' => 'target', 'PATH' => $curpathRef);
 
 sub setSomeEnv {
   my($hashref, $name, $val) = @_;
@@ -151,7 +152,6 @@ sub write_config_h {
 sub generate_workspace {
   my $buildEnv = shift;
   my %savedEnv = %ENV;
-  print "ENV: saving current environment\n" if $opts{'verbose'};
   mergeToEnv($buildEnv);
 
   my @mwc_common_args;
@@ -306,7 +306,7 @@ if (! -r "$host_tools_dir/ACE_TAO/ACE/host_tools.mwc") {
   write_host_workspace(\%hostEnv);
 }
 
-#configure_build(\%hostEnv);
+configure_build(\%hostEnv);
 
 print "Cross-compile configuring target\n";
 
@@ -317,5 +317,4 @@ setEnv('TAO_ROOT', './TAO');
 push_path(\%targetEnv, $hostEnv{'ACE_ROOT'} . $slash . 'bin');
 push_libpath(\%targetEnv, $hostEnv{'ACE_ROOT'} . $slash . 'lib');
 
-print %targetEnv;
 configure_build(\%targetEnv);
