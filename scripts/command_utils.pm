@@ -323,7 +323,6 @@ sub run_command {
 
   # Run command
   my $failed;
-  print "Command: @command_list\n";
   {
     no warnings 'exec';
     $failed = ($use_list ? system(@command_list) : system($command)) ? 1 : 0;

@@ -156,7 +156,7 @@ sub generate_workspace {
 
   my @mwc_common_args;
   if ($buildEnv->{'build'} eq 'host') {
-    @mwc_common_args = ('-type', 'vs2022');
+    @mwc_common_args = ('-type', 'vs2022', '-static');
   } else {
     @mwc_common_args = ('-type', 'ghs');
   }
