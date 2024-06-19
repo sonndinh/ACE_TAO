@@ -1,5 +1,9 @@
 #include "ace/Sig_Adapter.h"
 
+#if defined (ghs)
+# include "ace/Malloc_Base.h"
+#endif
+
 ACE_Sig_Adapter::ACE_Sig_Adapter (ACE_Sig_Action &sa, int sigkey)
   : sigkey_ (sigkey),
     type_ (SIG_ACTION),

@@ -20,6 +20,10 @@
 # include "cpuset.h"
 #endif /* ACE_HAS_VXCPULIB */
 
+#if defined (ghs)
+# include "ace/Malloc_Base.h"
+#endif
+
 #include <memory>
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
@@ -386,7 +390,7 @@ ACE_OS::num_processors ()
 #elif defined (ACE_HAS_VXCPULIB)
   return vxCpuConfiguredGet();
 #elif defined (_SC_NPROCESSORS_CONF)
-  return ::sysconf (_SC_NPROCESSORS_CONF);
+  return ACE_OS::sysconf (_SC_NPROCESSORS_CONF);
 #elif defined (ACE_HAS_SYSCTL)
   int num_processors = 0;
   int mib[2] = { CTL_HW, HW_NCPU };
@@ -432,7 +436,7 @@ ACE_OS::num_processors_online ()
     }
   return num_cpu;
 #elif defined (_SC_NPROCESSORS_ONLN)
-  return ::sysconf (_SC_NPROCESSORS_ONLN);
+  return ACE_OS::sysconf (_SC_NPROCESSORS_ONLN);
 #elif defined (ACE_HAS_SYSCTL)
   int num_processors;
   int mib[2] = { CTL_HW, HW_NCPU };

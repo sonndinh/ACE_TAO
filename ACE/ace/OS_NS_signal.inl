@@ -70,7 +70,7 @@ sigaction (int signum, const ACE_SIGACTION *nsa, ACE_SIGACTION *osa)
   else
     osa->sa_handler = ::signal (signum, nsa->sa_handler);
   return osa->sa_handler == SIG_ERR ? -1 : 0;
-#elif defined (ACE_LACKS_SIGACTION)
+#elif !defined (ACE_HAS_SIGACTION)
   ACE_UNUSED_ARG (nsa);
   ACE_UNUSED_ARG (osa);
   ACE_NOTSUP_RETURN (-1);
@@ -96,7 +96,11 @@ sigaddset (sigset_t *s, int signum)
       errno = EINVAL;
       return -1;                 // Invalid signum, return error
     }
-  *s |= (1 << (signum - 1)) ;
+# if defined (ghs)
+  (*s)._A(sigbits)[0] |= (1 << (signum - 1));
+# else
+  *s |= (1 << (signum - 1));
+# endif
   return 0 ;
 #else
   return ace_sigaddset_helper (s, signum);
@@ -117,7 +121,11 @@ sigdelset (sigset_t *s, int signum)
       errno = EINVAL;
       return -1;                 // Invalid signum, return error
     }
-  *s &= ~(1 << (signum - 1)) ;
+# if defined (ghs)
+  (*s)._A(sigbits)[0] &= ~(1 << (signum - 1));
+# else
+  *s &= ~(1 << (signum - 1));
+# endif
   return 0;
 #else
   return ace_sigdelset_helper (s, signum);
@@ -133,7 +141,12 @@ sigemptyset (sigset_t *s)
       errno = EFAULT;
       return -1;
     }
-  *s = 0 ;
+# if defined (ghs)
+  (*s)._A(sigbits)[0] = 0;
+  (*s)._A(sigbits)[1] = 0;
+# else
+  *s = 0;
+# endif
   return 0;
 #else
   return ace_sigemptyset_helper (s);
@@ -149,7 +162,12 @@ sigfillset (sigset_t *s)
       errno = EFAULT;
       return -1;
     }
+# if defined (ghs)
+  (*s)._A(sigbits)[0] = ~(unsigned int) 0;
+  (*s)._A(sigbits)[1] = ~(unsigned int) 0;
+# else
   *s = ~(sigset_t) 0;
+# endif
   return 0 ;
 #else
   return ace_sigfillset_helper (s);
@@ -170,7 +188,12 @@ sigismember (sigset_t *s, int signum)
       errno = EINVAL;
       return -1;                 // Invalid signum, return error
     }
-  return ((*s & (1 << (signum - 1))) != 0) ;
+# if defined (ghs)
+  return ((*s)._A(sigbits)[0] & (1 << (signum - 1))) != 0 ||
+    ((*s)._A(sigbits)[1] & (1 << (signum - 1))) != 0;
+# else
+  return ((*s & (1 << (signum - 1))) != 0);
+# endif
 #else
 #  if defined (ACE_HAS_SIGISMEMBER_BUG)
   if (signum < 1 || signum >= ACE_NSIG)

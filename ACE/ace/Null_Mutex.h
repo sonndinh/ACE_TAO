@@ -147,7 +147,7 @@ template <class ACE_LOCK>
 class ACE_Read_Guard;
 
 /**
- * @brief Template specialization of ACE_Read)Guard for the
+ * @brief Template specialization of ACE_Read_Guard for the
  * ACE_Null_Mutex.
  */
 template<>

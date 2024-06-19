@@ -11,9 +11,15 @@
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 
+#if defined (ACE_HAS_THREADS)
 using MT_Stream = ACE_Stream<ACE_MT_SYNCH>;
 using MT_Module = ACE_Module<ACE_MT_SYNCH>;
 using MT_Task = ACE_Task<ACE_MT_SYNCH>;
+#else
+using MT_Stream = ACE_Stream<ACE_NULL_SYNCH>;
+using MT_Module = ACE_Module<ACE_NULL_SYNCH>;
+using MT_Task = ACE_Task<ACE_NULL_SYNCH>;
+#endif
 
 ACE_ALLOC_HOOK_DEFINE(ACE_Service_Type_Impl)
 

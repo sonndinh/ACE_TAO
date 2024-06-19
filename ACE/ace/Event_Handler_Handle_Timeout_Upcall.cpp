@@ -6,6 +6,10 @@
 # include "ace/Event_Handler_Handle_Timeout_Upcall.inl"
 #endif /* __ACE_INLINE__ */
 
+#if defined (ghs)
+# include "Malloc_Base.h"
+#endif
+
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 
 ACE_ALLOC_HOOK_DEFINE(ACE_Event_Handler_Handle_Timeout_Upcall)

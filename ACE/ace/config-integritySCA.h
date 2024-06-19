@@ -26,7 +26,7 @@
 
 #define TAO_USE_SEQUENCE_TEMPLATES
 #define _REENTRANT
-#define ACE_MT_SAFE 1
+//#define ACE_MT_SAFE 1
 
 #define ACE_HAS_SHM_OPEN
 
@@ -45,8 +45,8 @@
 #if defined(INTEGRITY_VERSION) && (INTEGRITY_VERSION >= 40108)
 #define ACE_HAS_SIG_ATOMIC_T
 #endif /* INTEGRITY_VERSION */
-#define ACE_HAS_SIGWAIT
-#define ACE_HAS_SIGACTION
+//#define ACE_HAS_SIGWAIT
+//#define ACE_HAS_SIGACTION
 #define ACE_HAS_SIGINFO_T
 #define ACE_LACKS_SIGINFO_H
 #define ACE_LACKS_UCONTEXT_H
@@ -57,9 +57,9 @@
 #define ACE_HAS_POSIX_NONBLOCK
 #define ACE_HAS_DIRENT
 
-#define ACE_HAS_THREADS
+//#define ACE_HAS_THREADS
 
-#define ACE_HAS_PTHREADS
+//#define ACE_HAS_PTHREADS
 /***** End Threading Defines *****/
 
 /***** Hardware Defines *****/
@@ -81,12 +81,14 @@
 #define ACE_LACKS_SYSTEM
 
 /****** Posix Defines *****/
+#define ACE_LACKS_KILL
+#define ACE_LACKS_SIGSET
 #define ACE_LACKS_SUSECONDS_T
 #define ACE_LACKS_USECONDS_T
 #define ACE_LACKS_WAIT
 #define ACE_LACKS_WAITPID
 #define ACE_HAS_POSIX_TIME
-#define ACE_HAS_POSIX_SEM
+//#define ACE_HAS_POSIX_SEM
 #define ACE_HAS_STRDUP_EMULATION
 #define ACE_HAS_MSG
 #define ACE_LACKS_CONDATTR_PSHARED
@@ -125,8 +127,8 @@
 #define ACE_LACKS_SYSV_SHMEM
 #define ACE_LACKS_PUTENV
 #define ACE_HAS_4_4BSD_SENDMSG_RECVMSG
-#define ACE_HAS_CLOCK_GETTIME
-#define ACE_HAS_CLOCK_SETTIME
+//#define ACE_HAS_CLOCK_GETTIME
+//#define ACE_HAS_CLOCK_SETTIME
 #define ACE_LACKS_THREAD_PROCESS_SCOPING
 #define ACE_LACKS_SETSCHED
 #define ACE_LACKS_STRRECVFD

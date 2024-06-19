@@ -1479,7 +1479,7 @@ ACE_Thread_Manager::join (ACE_thread_t tid, ACE_THR_FUNC_RETURN *status)
   {
     ACE_MT (ACE_GUARD_RETURN (ACE_Thread_Mutex, ace_mon, this->lock_, -1));
 
-#if !defined (ACE_HAS_VXTHREADS)
+#if defined (ACE_HAS_THREADS) && !defined (ACE_HAS_VXTHREADS)
     for (ACE_Double_Linked_List_Iterator<ACE_Thread_Descriptor_Base> biter (this->terminated_thr_list_);
          !biter.done ();
          biter.advance ())
@@ -1499,7 +1499,7 @@ ACE_Thread_Manager::join (ACE_thread_t tid, ACE_THR_FUNC_RETURN *status)
             return 0;
           }
       }
-#endif /* !ACE_HAS_VXTHREADS */
+#endif /* ACE_HAS_THREADS && !ACE_HAS_VXTHREADS */
 
     using iter_t = ACE_Double_Linked_List_Iterator<ACE_Thread_Descriptor>;
     for (iter_t iter (this->thr_list_); !iter.done (); iter.advance ())
