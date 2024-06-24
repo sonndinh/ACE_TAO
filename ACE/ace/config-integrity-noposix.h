@@ -4,8 +4,8 @@
 #define ACE_CONFIG_INTEGRITY_NOPOSIX_H
 
 /*
- * This config.h file is for version 4.0.x of the
- * Integrity RTOS with SCA from Green Hills Software
+ * This config.h file is for version 11.4.x of the
+ * INTEGRITY RTOS without POSIX APIs from Green Hills Software
  * http://www.ghs.com/products/rtos/integrity.html
  */
 
@@ -103,22 +103,23 @@
 #define ACE_LACKS_SEEKDIR
 #define ACE_LACKS_MSYNC
 //#define ACE_LACKS_PID_STUFF
-
-// sonndinh: Continue here...
 #define ACE_LACKS_NETDB_REENTRANT_FUNCTIONS
 #define ACE_LACKS_SETGID
 #define ACE_LACKS_PIPE
 #define ACE_LACKS_SYS_PARAM_H
 #define ACE_LACKS_SYS_MSG_H
-#define ACE_LACKS_UTSNAME_T
+//#define ACE_LACKS_UTSNAME_T
 #define ACE_LACKS_UNAME
-#define ACE_LACKS_UMASK
+//#define ACE_LACKS_UMASK
 #define ACE_LACKS_ISATTY
-#define ACE_LACKS_GETOPT
+//#define ACE_LACKS_GETOPT
 #define ACE_LACKS_STRCASECMP
 #define ACE_LACKS_TRUNCATE
 #define ACE_LACKS_PWD_FUNCTIONS
 #define ACE_LACKS_UNIX_SIGNALS
+
+// INTEGRITY has this concept of thread-specific storage in its native API.
+// It's mentioned as Task-specific data in its document.
 #define ACE_HAS_THREAD_SPECIFIC_STORAGE
 #define ACE_LACKS_SYSV_SHMEM
 #define ACE_LACKS_PUTENV
@@ -126,32 +127,33 @@
 #define ACE_LACKS_THREAD_PROCESS_SCOPING
 #define ACE_LACKS_SETSCHED
 #define ACE_LACKS_STRRECVFD
-#define ACE_LACKS_WRITEV
-#define ACE_LACKS_READV
+//#define ACE_LACKS_WRITEV
+//#define ACE_LACKS_READV
 #define ACE_LACKS_SYSCONF
-#define ACE_LACKS_GETOPT
+//#define ACE_LACKS_GETOPT
 /* below refers to fcntl style locking */
-#define ACE_LACKS_FILELOCKS
+//#define ACE_LACKS_FILELOCKS
 
 #define ACE_LACKS_REALPATH
-#define ACE_HAS_CONST_CHAR_SWAB
+//#define ACE_HAS_CONST_CHAR_SWAB
+#define ACE_LACKS_SWAB
 #define ACE_HAS_CONSISTENT_SIGNAL_PROTOTYPES
 
 /***** Not tied to standards AFAIK ****/
 #define ACE_LACKS_MADVISE /* paging optimization not needed with INTEGRITY */
 #define ACE_LACKS_INTTYPES_H
 #define ACE_LACKS_SYS_RESOURCE_H
-#define ACE_LACKS_SYS_WAIT_H
+//#define ACE_LACKS_SYS_WAIT_H
 #define ACE_LACKS_SEARCH_H
 #define ACE_LACKS_SYS_IPC_H
 #define ACE_LACKS_SYS_SEM_H
-#define ACE_LACKS_PWD_H
+//#define ACE_LACKS_PWD_H
 #define ACE_LACKS_STROPTS_H
-#define ACE_LACKS_DLFCN_H
-#define ACE_LACKS_REGEX_H
-#define ACE_LACKS_POLL_H
+//#define ACE_LACKS_DLFCN_H
+//#define ACE_LACKS_REGEX_H
+//#define ACE_LACKS_POLL_H
 #define ACE_LACKS_SYS_SHM_H
-#define ACE_LACKS_TERMIOS_H
+//#define ACE_LACKS_TERMIOS_H
 
 /***** STUFF INTEGRITY 4.0.8 APPEARS TO SUPPORT ****/
 /* note, possibly untested with ace */
@@ -165,10 +167,10 @@
 
 typedef void (*__sighandler_t)(int);
 
-extern "C"
-{
-  inline int isatty(int) { return 0; }
-}
+//extern "C"
+//{
+//  inline int isatty(int) { return 0; }
+//}
 
 #ifdef ppc
 #define ACE_HAS_POWERPC_TIMER
