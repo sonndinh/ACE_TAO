@@ -684,7 +684,7 @@ run_main (int argc, ACE_TCHAR *argv[])
                   -1);
 
   // new (optimized) version
-  using timer_heap_hr_type = ACE_Timer_Heap_T<ACE_Event_Handler *, ACE_Event_Handler_Handle_Timeout_Upcall, ACE_MT_SYNCH::RECURSIVE_MUTEX, ACE_HR_Time_Policy>;
+  using timer_heap_hr_type = ACE_Timer_Heap_T<ACE_Event_Handler *, ACE_Event_Handler_Handle_Timeout_Upcall, ACE_SYNCH::RECURSIVE_MUTEX, ACE_HR_Time_Policy>;
   ACE_NEW_RETURN (tq_stack,
                   Timer_Queue_Stack (new timer_heap_hr_type,
                                      ACE_TEXT ("ACE_Timer_Heap (high-res timer)"),
