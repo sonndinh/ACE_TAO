@@ -1,11 +1,11 @@
 // -*- C++ -*-
 
-#ifndef ACE_CONFIG_INTEGRITY_NOPOSIX_H
-#define ACE_CONFIG_INTEGRITY_NOPOSIX_H
+#ifndef ACE_CONFIG_INTEGRITY178_H
+#define ACE_CONFIG_INTEGRITY178_H
 
 /*
- * This config.h file is for version 11.4.x of the
- * INTEGRITY RTOS without POSIX APIs from Green Hills Software
+ * This config.h file is for version 11.4.y of the
+ * INTEGRITY-178 RTOS from Green Hills Software
  * http://www.ghs.com/products/rtos/integrity.html
  */
 
@@ -155,6 +155,24 @@
 #define ACE_LACKS_SYS_SHM_H
 //#define ACE_LACKS_TERMIOS_H
 
+/***** Network utility functions *****/
+#define ACE_LACKS_GETADDRINFO
+#define ACE_LACKS_GAI_STRERROR
+#define ACE_LACKS_GETHOSTBYADDR
+#define ACE_LACKS_GETHOSTBYADDR_R
+#define ACE_LACKS_GETHOSTBYNAME
+#define ACE_LACKS_GETNAMEINFO
+#define ACE_LACKS_GETPROTOBYNAME
+#define ACE_LACKS_GETPROTOBYNUMBER
+#define ACE_LACKS_GETSERVBYNAME
+#define ACE_LACKS_IF_NAMEINDEX
+#define ACE_LACKS_IF_NAMETOINDEX
+#define ACE_LACKS_INET_ADDR
+#define ACE_LACKS_INET_ATON
+#define ACE_LACKS_INET_NTOA
+#define ACE_LACKS_INET_NTOP
+#define ACE_LACKS_INET_PTON
+
 /***** STUFF INTEGRITY 4.0.8 APPEARS TO SUPPORT ****/
 /* note, possibly untested with ace */
 
@@ -218,4 +236,4 @@ int unlink(const char *);
 // have the right linkage
 #include <unistd.h>
 
-#endif /* ACE_CONFIG_INTEGRITY_NOPOSIX_H */
+#endif /* ACE_CONFIG_INTEGRITY178_H */
