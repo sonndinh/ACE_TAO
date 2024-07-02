@@ -36,6 +36,10 @@
 #  include /**/ <sockLib.h>
 #endif /* ACE_USES_SOCKLIB_H */
 
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+#  include  <tcp-ip_interface.h>
+#endif /* ghs && ACE_USES_GHS_LEONET */
+
 // Place all additions (especially function declarations) within extern "C" {}
 #ifdef __cplusplus
 extern "C"

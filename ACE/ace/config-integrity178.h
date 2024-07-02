@@ -34,7 +34,6 @@
 
 /***** ANSI defines *****/
 #define ACE_LACKS_TEMPNAM /* believe it or not, this is ANSI C */
-#define ACE_LACKS_SENDMSG
 
 /***** End Stack Defines *****/
 
@@ -172,6 +171,17 @@
 #define ACE_LACKS_INET_NTOA
 #define ACE_LACKS_INET_NTOP
 #define ACE_LACKS_INET_PTON
+
+/***** Socket functions *****/
+#define ACE_LACKS_DUP
+#define ACE_LACKS_DUP2
+#define ACE_LACKS_FCNTL
+#define ACE_LACKS_IOCTL
+#define ACE_LACKS_RECVMSG
+#define ACE_LACKS_SENDMSG
+#define ACE_LACKS_SHUTDOWN
+#define ACE_LACKS_SOCKETPAIR
+#define ACE_USES_GHS_LEONET
 
 /***** STUFF INTEGRITY 4.0.8 APPEARS TO SUPPORT ****/
 /* note, possibly untested with ace */

@@ -43,6 +43,9 @@ ACE_OS::accept (ACE_HANDLE handle,
   ACE_UNUSED_ARG (addr);
   ACE_UNUSED_ARG (addrlen);
   ACE_NOTSUP_RETURN (ACE_INVALID_HANDLE);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  // TODO(sonndinh): Convert the arguments for this call.
+  Tcp_Accept (handle, addr, addrlen);
 #elif defined (ACE_WIN32)
   ACE_SOCKCALL_RETURN (::accept ((ACE_SOCKET) handle,
                                  addr,
@@ -956,6 +959,21 @@ ACE_OS::socket (int domain,
   ACE_UNUSED_ARG (type);
   ACE_UNUSED_ARG (proto);
   ACE_NOTSUP_RETURN (ACE_INVALID_HANDLE);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  UINT4 socket_type = 0;
+  if (type == SOCK_STREAM) {
+    socket_type = PROTO_TCP;
+  } else if (type == SOCK_DGRAM) {
+    socket_type = PROTO_UDP;
+  } else {
+    return ACE_INVALID_HANDLE;
+  }
+  INT4 handle;
+  INT4 ret = Socket(socket_type, NORMAL_PRIORITY, BUFFER_64KB, &handle);
+  if (ret != DONE) {
+    return ACE_INVALID_HANDLE;
+  }
+  return handle;
 #else
   ACE_SOCKCALL_RETURN (::socket (domain,
                                  type,
