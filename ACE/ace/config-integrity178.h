@@ -181,6 +181,8 @@
 #define ACE_LACKS_SENDMSG
 #define ACE_LACKS_SHUTDOWN
 #define ACE_LACKS_SOCKETPAIR
+
+// In some distribution, LEONET networking stack is used
 #define ACE_USES_GHS_LEONET
 
 /***** STUFF INTEGRITY 4.0.8 APPEARS TO SUPPORT ****/
