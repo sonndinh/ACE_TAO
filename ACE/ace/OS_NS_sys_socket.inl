@@ -26,9 +26,9 @@ typedef const char *ACE_SOCKOPT_TYPE1;
 namespace
 {
   // Convert from a POSIX socket address structure to a structure used in LEONET.
-  void to_leonet_address (struct sockaddr* posix_addr, SockAddr_t& leonet_addr)
+  void to_leonet_address (const struct sockaddr* posix_addr, SockAddr_t& leonet_addr)
   {
-    const struct sockaddr_in* const posix_addr_in = (const struct sockaddr_in*)posix_addr;
+    const struct sockaddr_in* const posix_addr_in = (const struct sockaddr_in*) posix_addr;
 
     // What should the Len and Spare fields be?
     leonet_addr.Len = sizeof (SockAddr_t);
@@ -37,6 +37,14 @@ namespace
     leonet_addr.Address = addr_in->sin_addr.s_addr;
     leonet_addr.Spare[0] = 0;
     leonet_addr.Spare[1] = 0;
+  }
+
+  void from_leonet_address (const SockAddr_t& leonet_addr, struct sockaddr* posix_addr)
+  {
+    struct sockaddr_in* posix_addr_in = (struct sockaddr_in*) posix_addr;
+    posix_addr->sin_family = leonet_addr.Family;
+    posix_addr->sin_port = leonet_addr.Port;
+    posix_addr->sin_addr.s_addr = leonet_addr.Address;
   }
 }
 #endif /* ghs && ACE_USES_GHS_LEONET */
@@ -63,8 +71,18 @@ ACE_OS::accept (ACE_HANDLE handle,
   ACE_UNUSED_ARG (addrlen);
   ACE_NOTSUP_RETURN (ACE_INVALID_HANDLE);
 #elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
-  // TODO(sonndinh): Convert the arguments for this call.
-  Tcp_Accept (handle, addr, addrlen);
+  SockAddr_t client_name;
+  INT4 handle_out = ACE_INVALID_HANDLE;
+  const INT4 ret = ::Tcp_Accept (handle, &client_name, &handle_out);
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  if (addr != 0 && addrlen != 0) {
+    from_leonet_address(client_name, addr);
+    *addrlen = sizeof (struct sockaddr_in);
+  }
+  // In case of DONE, is handle_out the socket connected to the client, not the listening socket?
+  return handle_out;
 #elif defined (ACE_WIN32)
   ACE_SOCKCALL_RETURN (::accept ((ACE_SOCKET) handle,
                                  addr,
@@ -142,6 +160,10 @@ ACE_OS::bind (ACE_HANDLE handle, struct sockaddr *addr, int addrlen)
 #elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
   ACE_UNUSED_ARG (addrlen);
   SockAddr_t socket_name;
+  if (!addr) {
+    errno = EDESTADDRREQ;
+    return -1;
+  }
   to_leonet_address (addr, socket_name);
   const INT4 ret = ::Bind (handle, socket_name);
   return ret == PENDING ? 0 : -1;
@@ -163,6 +185,9 @@ ACE_OS::closesocket (ACE_HANDLE handle)
   //       process.
 
   ACE_SOCKCALL_RETURN (::closesocket ((SOCKET) handle), int, -1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  const INT4 ret = ::Tcp_Close (handle);
+  return ret == DONE ? 0 : -1;
 #else
   //FUZZ: disable check_for_lack_ACE_OS
   return ::close (handle);
@@ -184,6 +209,11 @@ ACE_OS::connect (ACE_HANDLE handle,
 #elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
   ACE_UNUSED_ARG (addrlen);
   SockAddr_t remote_addr;
+  if (!addr) {
+    // Connect call requires a remote address,
+    // but it's valid to pass a null addr to the connect call, so don't need to set errno.
+    return -1;
+  }
   to_leonet_address (addr, remote_addr);
   const INT4 ret = ::Connect (handle, remote_addr);
   return ret == PENDING ? 0 : -1;
@@ -226,6 +256,15 @@ ACE_OS::getpeername (ACE_HANDLE handle, struct sockaddr *addr,
   ACE_UNUSED_ARG (addr);
   ACE_UNUSED_ARG (addrlen);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t peer_name;
+  const INT4 ret = ::GetPeerName (handle, &peer_name);
+  if (ret != PENDING) {
+    return -1;
+  }
+  from_leonet_address (peer_name, addr);
+  *addrlen = sizeof (struct sockaddr_in);
+  return 0;
 #elif defined (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO) \
            && (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO == 1)
   int result;
@@ -274,6 +313,15 @@ ACE_OS::getsockname (ACE_HANDLE handle,
   ACE_UNUSED_ARG (addr);
   ACE_UNUSED_ARG (addrlen);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t sock_name;
+  const INT4 ret = ::GetSocketName (handle, &sock_name);
+  if (ret != PENDING) {
+    return -1;
+  }
+  from_leonet_address (sock_name, addr);
+  *addrlen = sizeof (struct sockaddr_in);
+  return 0;
 #elif defined (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO) \
            && (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO == 1)
   int result;
@@ -327,6 +375,17 @@ ACE_OS::getsockopt (ACE_HANDLE handle,
   ACE_UNUSED_ARG (optval);
   ACE_UNUSED_ARG (optlen);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (level);
+  OptVal_t opt_value;
+  const INT4 ret = ::GetSocketOpt (handle, optname, &opt_value);
+  if (ret != PENDING) {
+    return -1;
+  }
+  // How are the fields in OptVal_t mapped to optval and optlen?
+  *optval = opt_value.Character;
+  *optlen = sizeof (char);
+  return 0;
 #else
   ACE_SOCKCALL_RETURN (::getsockopt ((ACE_SOCKET) handle,
                                      level,
@@ -374,6 +433,14 @@ ACE_OS::recv (ACE_HANDLE handle, char *buf, size_t len, int flags)
   ACE_UNUSED_ARG (len);
   ACE_UNUSED_ARG (flags);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  UINT4 read_len = 0;
+  // Does Recv expect the same set of flags?
+  const INT4 ret = ::Recv (handle, (Address)buf, len, &read_len, static_cast<UINT4>(flags));
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  return read_len;
 #elif defined (ACE_WIN32)
   ACE_SOCKCALL_RETURN (::recv ((ACE_SOCKET) handle, buf,
                                static_cast<int> (len), flags), ssize_t, -1);
@@ -418,6 +485,18 @@ ACE_OS::recvfrom (ACE_HANDLE handle,
   ACE_UNUSED_ARG (addr);
   ACE_UNUSED_ARG (addrlen);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t from_addr;
+  UINT4 read_len = 0;
+  const INT4 ret = ::RecvFrom (handle, (Address)buf, len, &from_addr, &read_len, static_cast<UINT4>(flags));
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  if (addr != 0 && addrlen != 0) {
+    from_leonet_address (from_addr, addr);
+    *addrlen = sizeof (struct sockaddr_in);
+  }
+  return read_len;
 #elif defined (ACE_WIN32)
   int const shortened_len = static_cast<int> (len);
   int const result = ::recvfrom ((ACE_SOCKET) handle,
@@ -607,6 +686,14 @@ ACE_OS::send (ACE_HANDLE handle, const char *buf, size_t len, int flags)
   ACE_UNUSED_ARG (len);
   ACE_UNUSED_ARG (flags);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (flags);
+  UINT4 sent_len = 0;
+  const INT4 ret = ::Send (handle, (Address)buf, len, sent_len);
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  return sent_len;
 #elif defined (ACE_WIN32)
   ssize_t result = ::send ((ACE_SOCKET) handle,
                            buf,
@@ -711,6 +798,15 @@ ACE_OS::sendto (ACE_HANDLE handle,
   ACE_UNUSED_ARG (addr);
   ACE_UNUSED_ARG (addrlen);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t to_addr;
+  to_leonet_address (addr, to_addr);
+  UINT4 sent_len = 0;
+  const INT4 ret = ::SendTo (handle, (Address)buf, len, to_addr, &sent_len);
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  return sent_len;
 #elif defined (ACE_VXWORKS)
   ACE_SOCKCALL_RETURN (::sendto ((ACE_SOCKET) handle,
                                  const_cast <char *> (buf),
@@ -949,6 +1045,17 @@ ACE_OS::setsockopt (ACE_HANDLE handle,
   ACE_UNUSED_ARG (optval);
   ACE_UNUSED_ARG (optlen);
   ACE_NOTSUP_RETURN (-1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (level);
+  ACE_UNUSED_ARG (optlen);
+  if (!optval) {
+    return -1;
+  }
+  // TODO(sonndinh): Set the other fields of opt_value
+  OptVal_t opt_value;
+  opt_value.Character = *optval;
+  const INT4 ret = ::SetSocketOpt (handle, optname, &opt_value);
+  return ret == PENDING ? 0 : -1;
 #else
   int result;
   ACE_SOCKCALL (::setsockopt ((ACE_SOCKET) handle,
@@ -959,11 +1066,11 @@ ACE_OS::setsockopt (ACE_HANDLE handle,
                 int,
                 -1,
                 result);
-#if defined (WSAEOPNOTSUPP)
+# if defined (WSAEOPNOTSUPP)
   if (result == -1 && (errno == WSAEOPNOTSUPP || errno == WSAENOPROTOOPT))
-#else
+# else
   if (result == -1)
-#endif /* WSAEOPNOTSUPP */
+# endif /* WSAEOPNOTSUPP */
     errno = ENOTSUP;
   return result;
 #endif
