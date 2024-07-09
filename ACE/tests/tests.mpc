@@ -1677,6 +1677,20 @@ project(SOCK Test) : acetest {
   }
 }
 
+project(SOCK Test Client) : acetest {
+  exename = SOCK_Test_Client
+  Source_Files {
+    SOCK_Test_Client.cpp
+  }
+}
+
+project(SOCK Test Server) : acetest {
+  exename = SOCK_Test_Server
+  Source_Files {
+    SOCK_Test_Server.cpp
+  }
+}
+
 project(SOCK Dgram Test) : acetest {
   exename = SOCK_Dgram_Test
     Source_Files {
