@@ -264,12 +264,15 @@ TAO_IIOP_Connection_Handler::open (void*)
         }
     }
 
+  // Green Hills INTEGRITY Simulator does not support fcntl on sockets.
+#if !defined (ACE_USES_GHS_ISIMPPC)
   if (this->transport ()->wait_strategy ()->non_blocking ()
       || this->transport ()->opened_as () == TAO::TAO_SERVER_ROLE)
     {
       if (this->peer ().enable (ACE_NONBLOCK) == -1)
         return -1;
     }
+#endif
 
   // Called by the <Strategy_Acceptor> when the handler is
   // completely connected.

@@ -413,7 +413,11 @@ ACE_INET_Addr::set (u_short port_number,
   // lookups from completing if there is no, or only a loopback, IPv6
   // interface configured. See Bugzilla 4211 for more info.
 
+  // Green Hills INTEGRITY does not have AI_V4MAPPED flag.
+#if !defined (ghs)
   hints.ai_flags = AI_V4MAPPED;
+#endif
+
 #if defined(ACE_HAS_IPV6) && defined(AI_ALL)
   // Without AI_ALL, Windows machines exhibit inconsistent behaviors on
   // difference machines we have tested.
@@ -434,9 +438,6 @@ ACE_INET_Addr::set (u_short port_number,
   if (error)
     {
       errno = error;
-      // sonndinh: start
-      //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::set(u_short, const char, int, int): getaddrinfo returns %d: %p\n", error));
-      // sonndinh: end
       return -1;
     }
 

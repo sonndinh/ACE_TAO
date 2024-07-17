@@ -92,10 +92,16 @@ ACE_SOCK_Connector::shared_connect_start (ACE_SOCK_Stream &new_stream,
     }
 
   // Enable non-blocking, if required.
+#if !defined (ACE_USES_GHS_ISIMPPC)
+  // Green Hills INTEGRITY Simulator does not support fcntl on sockets which is called
+  // by the enable function on new_stream.
   if (timeout != 0 && new_stream.enable (ACE_NONBLOCK) == -1)
     return -1;
   else
     return 0;
+#else
+  return 0;
+#endif
 }
 
 int
@@ -157,11 +163,15 @@ ACE_SOCK_Connector::shared_connect_finish (ACE_SOCK_Stream &new_stream,
   if (result != -1 || error == EISCONN)
     {
       // Start out with non-blocking disabled on the new_stream.
+#if !defined (ACE_USES_GHS_ISIMPPC)
+      // Green Hills INTEGRITY Simulator does not support fcntl for sockets
+      // which is called by the enable function on new_stream.
       result = new_stream.disable (ACE_NONBLOCK);
       if (result == -1)
         {
           new_stream.close ();
         }
+#endif
     }
   else if (!(error == EWOULDBLOCK || error == ETIMEDOUT))
     {

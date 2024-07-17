@@ -611,8 +611,13 @@ ACE_Strategy_Acceptor<SVC_HANDLER, PEER_ACCEPTOR>::open
   // socket handle is "ready" and when we call <accept>.  During this
   // interval, the client can shutdown the connection, in which case,
   // the <accept> call can hang!
+
+  // sonndinh: Green Hills INTEGRITY Simulator doesn't support fcntl for sockets
+  // which is behind this call. So this will fail.
+#if !defined (ACE_USES_GHS_ISIMPPC)
   if (this->accept_strategy_->acceptor ().enable (ACE_NONBLOCK) != 0)
     return -1;
+#endif
 
   // Initialize the concurrency strategy.
 

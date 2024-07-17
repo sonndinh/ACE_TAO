@@ -173,6 +173,9 @@ ACE_Concurrency_Strategy<SVC_HANDLER>::activate_svc_handler (SVC_HANDLER *svc_ha
 
   // See if we should enable non-blocking I/O on the <svc_handler>'s
   // peer.
+  // Green Hills INTEGRITY Simulator does not support fcntl on sockets
+  // which the enable and disable calls rely on.
+#if !defined (ACE_USES_GHS_ISIMPPC)
   if (ACE_BIT_ENABLED (this->flags_, ACE_NONBLOCK) != 0)
     {
       if (svc_handler->peer ().enable (ACE_NONBLOCK) == -1)
@@ -181,6 +184,7 @@ ACE_Concurrency_Strategy<SVC_HANDLER>::activate_svc_handler (SVC_HANDLER *svc_ha
   // Otherwise, make sure it's disabled by default.
   else if (svc_handler->peer ().disable (ACE_NONBLOCK) == -1)
     result = -1;
+#endif
 
   if (result == 0 && svc_handler->open (arg) == -1)
     result = -1;
@@ -302,8 +306,13 @@ ACE_Accept_Strategy<SVC_HANDLER, ACE_PEER_ACCEPTOR_2>::open
   // socket handle is "ready" and when we call <accept>.  During this
   // interval, the client can shutdown the connection, in which case,
   // the <accept> call can hang!
+
+  // Green Hills INTEGRITY Simulator doesn't support fcntl on sockets which
+  // this call relies on.
+#if !defined (ACE_USES_GHS_ISIMPPC)
   if (this->peer_acceptor_.enable (ACE_NONBLOCK) == -1)
     return -1;
+#endif
 
   return 0;
 }
