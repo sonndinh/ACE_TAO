@@ -9,7 +9,8 @@ const ACE_TCHAR *ior = ACE_TEXT ("file://test.ior");
 // Run the server which will print the IOR string to the console.
 // Then replace "IOR_string_from_server" with the actual IOR.
 // TODO: pass the IOR string as the argument to the client.
-const ACE_TCHAR *ior = ACE_TEXT ("IOR_string_from_server");
+const ACE_TCHAR *ior = ACE_TEXT ("IO_string_from_server");
+//const ACE_TCHAR *ior = ACE_TEXT ("IOR:000000000000001349444c3a546573742f48656c6c6f3a312e300000000000010000000000000048000102000000000a3132372e302e302e3100c5a60000001b14010f005253540000033900077d55000000000000000100000001000000000100000000000000080042319454414f00");
 #endif
 
 //TAO_debug_level = 8;
