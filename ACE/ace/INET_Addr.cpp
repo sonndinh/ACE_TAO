@@ -261,11 +261,6 @@ ACE_INET_Addr::string_to_addr (const char s[], int address_family)
 
       char *endp = 0;
       long port = ACE_OS::strtol (port_p, &endp, 10);
-      // sonndinh: start
-      //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::string_to_addr: Input: %C\n", s));
-      //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::string_to_addr: Port string before parse: %C\n", port_p));
-      //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::string_to_addr: Parsed port number is %d\n", port));
-      // sonndinh: end
 
       if (*endp == '\0')    // strtol scanned the entire string - all digits
         {
@@ -273,13 +268,7 @@ ACE_INET_Addr::string_to_addr (const char s[], int address_family)
             result = -1;
           else
           {
-            // sonndinh: start
-            //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::string_to_addr: ip_addr is %C\n", ip_addr));
-            // sonndinh: end
             result = this->set (u_short (port), ip_addr, 1, address_family);
-            // sonndinh: start
-            //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::string_to_addr: set returns %d\n", result));
-            // sonndinh: end
           }
         }
       else
@@ -545,9 +534,6 @@ ACE_INET_Addr::set (const char port_name[],
   int const port_number = get_port_number_from_name (port_name, protocol);
   if (port_number == -1)
     {
-      // sonndinh: start
-      //ACE_DEBUG((LM_DEBUG, "ACE_INET_Addr::set(const char, ACE_UINT32, const char): get_port_number_from_name failed\n"));
-      // sonndinh: end
       ACE_NOTSUP_RETURN (-1);
     }
 

@@ -1,0 +1,346 @@
+#!gbuild
+#primaryTarget=ppc_integrity.tgt
+[Library]
+	-o lib/libexample.a
+	-Ospeed
+	-OI
+	--exceptions
+	-L.
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=BooleanSeq.pidl
+	:preExecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata BooleanSeq.pidl'
+	:extraOutputFile=AnyTypeCode\BooleanSeqA.cpp
+	:extraOutputFile=AnyTypeCode\BooleanSeqA.h
+	:extraOutputFile=BooleanSeqC.cpp
+	:extraOutputFile=BooleanSeqC.h
+	:extraOutputFile=BooleanSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=CONV_FRAME.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci CONV_FRAME.pidl'
+	:extraOutputFile=AnyTypeCode\CONV_FRAMEA.cpp
+	:extraOutputFile=AnyTypeCode\CONV_FRAMEA.h
+	:extraOutputFile=CONV_FRAMEC.cpp
+	:extraOutputFile=CONV_FRAMEC.h
+	:extraOutputFile=CONV_FRAMES.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=CharSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata CharSeq.pidl'
+	:extraOutputFile=AnyTypeCode\CharSeqA.cpp
+	:extraOutputFile=AnyTypeCode\CharSeqA.h
+	:extraOutputFile=CharSeqC.cpp
+	:extraOutputFile=CharSeqC.h
+	:extraOutputFile=CharSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Current.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci Current.pidl'
+	:extraOutputFile=AnyTypeCode\\CurrentA.cpp
+	:extraOutputFile=AnyTypeCode\\CurrentA.h
+	:extraOutputFile=CurrentC.cpp
+	:extraOutputFile=CurrentC.h
+	:extraOutputFile=CurrentS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=DoubleSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata DoubleSeq.pidl'
+	:extraOutputFile=AnyTypeCode\DoubleSeqA.cpp
+	:extraOutputFile=AnyTypeCode\DoubleSeqA.h
+	:extraOutputFile=DoubleSeqC.cpp
+	:extraOutputFile=DoubleSeqC.h
+	:extraOutputFile=DoubleSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=FloatSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata FloatSeq.pidl'
+	:extraOutputFile=AnyTypeCode\FloatSeqA.cpp
+	:extraOutputFile=AnyTypeCode\FloatSeqA.h
+	:extraOutputFile=FloatSeqC.cpp
+	:extraOutputFile=FloatSeqC.h
+	:extraOutputFile=FloatSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=GIOP.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h GIOP.pidl'
+	:extraOutputFile=AnyTypeCode\GIOPA.cpp
+	:extraOutputFile=AnyTypeCode\GIOPA.h
+	:extraOutputFile=GIOPC.cpp
+	:extraOutputFile=GIOPC.h
+	:extraOutputFile=GIOPC.inl
+	:extraOutputFile=GIOPS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=IIOP.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci IIOP.pidl'
+	:extraOutputFile=AnyTypeCode\IIOPA.cpp
+	:extraOutputFile=AnyTypeCode\IIOPA.h
+	:extraOutputFile=IIOPC.cpp
+	:extraOutputFile=IIOPC.h
+	:extraOutputFile=IIOPS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=IIOP_Endpoints.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci IIOP_Endpoints.pidl'
+	:extraOutputFile=AnyTypeCode\IIOP_EndpointsA.cpp
+	:extraOutputFile=AnyTypeCode\IIOP_EndpointsA.h
+	:extraOutputFile=IIOP_EndpointsC.cpp
+	:extraOutputFile=IIOP_EndpointsC.h
+	:extraOutputFile=IIOP_EndpointsS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=IOP.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci IOP.pidl'
+	:extraOutputFile=AnyTypeCode\IOPA.cpp
+	:extraOutputFile=AnyTypeCode\IOPA.h
+	:extraOutputFile=IOPC.cpp
+	:extraOutputFile=IOPC.h
+	:extraOutputFile=IOPS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Int8Seq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata --idl-version 4 Int8Seq.pidl'
+	:extraOutputFile=AnyTypeCode\Int8SeqA.cpp
+	:extraOutputFile=AnyTypeCode\Int8SeqA.h
+	:extraOutputFile=Int8SeqC.cpp
+	:extraOutputFile=Int8SeqC.h
+	:extraOutputFile=Int8SeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=LongDoubleSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata LongDoubleSeq.pidl'
+	:extraOutputFile=AnyTypeCode\LongDoubleSeqA.cpp
+	:extraOutputFile=AnyTypeCode\LongDoubleSeqA.h
+	:extraOutputFile=LongDoubleSeqC.cpp
+	:extraOutputFile=LongDoubleSeqC.h
+	:extraOutputFile=LongDoubleSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=LongLongSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata LongLongSeq.pidl'
+	:extraOutputFile=AnyTypeCode\LongLongSeqA.cpp
+	:extraOutputFile=AnyTypeCode\LongLongSeqA.h
+	:extraOutputFile=LongLongSeqC.cpp
+	:extraOutputFile=LongLongSeqC.h
+	:extraOutputFile=LongLongSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=LongSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata LongSeq.pidl'
+	:extraOutputFile=AnyTypeCode\LongSeqA.cpp
+	:extraOutputFile=AnyTypeCode\LongSeqA.h
+	:extraOutputFile=LongSeqC.cpp
+	:extraOutputFile=LongSeqC.h
+	:extraOutputFile=LongSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Messaging_PolicyValue.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci Messaging_PolicyValue.pidl'
+	:extraOutputFile=AnyTypeCode\Messaging_PolicyValueA.cpp
+	:extraOutputFile=AnyTypeCode\Messaging_PolicyValueA.h
+	:extraOutputFile=Messaging_PolicyValueC.cpp
+	:extraOutputFile=Messaging_PolicyValueC.h
+	:extraOutputFile=Messaging_PolicyValueS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Messaging_SyncScope.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci Messaging_SyncScope.pidl'
+	:extraOutputFile=AnyTypeCode\Messaging_SyncScopeA.cpp
+	:extraOutputFile=AnyTypeCode\Messaging_SyncScopeA.h
+	:extraOutputFile=Messaging_SyncScopeC.cpp
+	:extraOutputFile=Messaging_SyncScopeC.h
+	:extraOutputFile=Messaging_SyncScopeS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=ObjectIdList.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci ObjectIdList.pidl'
+	:extraOutputFile=AnyTypeCode\ObjectIdListA.cpp
+	:extraOutputFile=AnyTypeCode\ObjectIdListA.h
+	:extraOutputFile=ObjectIdListC.cpp
+	:extraOutputFile=ObjectIdListC.h
+	:extraOutputFile=ObjectIdListS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=OctetSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata OctetSeq.pidl'
+	:extraOutputFile=AnyTypeCode\OctetSeqA.cpp
+	:extraOutputFile=AnyTypeCode\OctetSeqA.h
+	:extraOutputFile=OctetSeqC.cpp
+	:extraOutputFile=OctetSeqC.h
+	:extraOutputFile=OctetSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=PI_Forward.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci PI_Forward.pidl'
+	:extraOutputFile=AnyTypeCode\PI_ForwardA.cpp
+	:extraOutputFile=AnyTypeCode\PI_ForwardA.h
+	:extraOutputFile=PI_ForwardC.cpp
+	:extraOutputFile=PI_ForwardC.h
+	:extraOutputFile=PI_ForwardS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=ParameterMode.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Sat ParameterMode.pidl'
+	:extraOutputFile=AnyTypeCode\ParameterModeA.cpp
+	:extraOutputFile=AnyTypeCode\ParameterModeA.h
+	:extraOutputFile=ParameterModeC.cpp
+	:extraOutputFile=ParameterModeC.h
+	:extraOutputFile=ParameterModeS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Policy.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -GT -oS PortableServer -Gd -Wb,safe_include=tao/PolicyC.h -Wb,skel_export_macro=TAO_PortableServer_Export -Wb,skel_export_include=tao/PortableServer/portableserver_export.h Policy.pidl'
+	:extraOutputFile=AnyTypeCode\PolicyA.cpp
+	:extraOutputFile=AnyTypeCode\PolicyA.h
+	:extraOutputFile=PolicyC.cpp
+	:extraOutputFile=PolicyC.h
+	:extraOutputFile=PolicyC.inl
+	:extraOutputFile=PortableServer\PolicyS.cpp
+	:extraOutputFile=PortableServer\PolicyS.h
+	:extraOutputFile=PortableServer\PolicyS_T.cpp
+	:extraOutputFile=PortableServer\PolicyS_T.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Policy_Current.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci Policy_Current.pidl'
+	:extraOutputFile=AnyTypeCode\Policy_CurrentA.cpp
+	:extraOutputFile=AnyTypeCode\Policy_CurrentA.h
+	:extraOutputFile=Policy_CurrentC.cpp
+	:extraOutputFile=Policy_CurrentC.h
+	:extraOutputFile=Policy_CurrentS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Policy_Forward.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Sa Policy_Forward.pidl'
+	:extraOutputFile=AnyTypeCode\Policy_ForwardA.cpp
+	:extraOutputFile=AnyTypeCode\Policy_ForwardA.h
+	:extraOutputFile=Policy_ForwardC.cpp
+	:extraOutputFile=Policy_ForwardC.h
+	:extraOutputFile=Policy_ForwardS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Policy_Manager.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci Policy_Manager.pidl'
+	:extraOutputFile=AnyTypeCode\Policy_ManagerA.cpp
+	:extraOutputFile=AnyTypeCode\Policy_ManagerA.h
+	:extraOutputFile=Policy_ManagerC.cpp
+	:extraOutputFile=Policy_ManagerC.h
+	:extraOutputFile=Policy_ManagerS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=PortableInterceptor.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci PortableInterceptor.pidl'
+	:extraOutputFile=AnyTypeCode\PortableInterceptorA.cpp
+	:extraOutputFile=AnyTypeCode\PortableInterceptorA.h
+	:extraOutputFile=PortableInterceptorC.cpp
+	:extraOutputFile=PortableInterceptorC.h
+	:extraOutputFile=PortableInterceptorS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Services.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci Services.pidl'
+	:extraOutputFile=AnyTypeCode\ServicesA.cpp
+	:extraOutputFile=AnyTypeCode\ServicesA.h
+	:extraOutputFile=ServicesC.cpp
+	:extraOutputFile=ServicesC.h
+	:extraOutputFile=ServicesS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=ShortSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata ShortSeq.pidl'
+	:extraOutputFile=AnyTypeCode\ShortSeqA.cpp
+	:extraOutputFile=AnyTypeCode\ShortSeqA.h
+	:extraOutputFile=ShortSeqC.cpp
+	:extraOutputFile=ShortSeqC.h
+	:extraOutputFile=ShortSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=StringSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata StringSeq.pidl'
+	:extraOutputFile=AnyTypeCode\StringSeqA.cpp
+	:extraOutputFile=AnyTypeCode\StringSeqA.h
+	:extraOutputFile=StringSeqC.cpp
+	:extraOutputFile=StringSeqC.h
+	:extraOutputFile=StringSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=TAO.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci TAO.pidl'
+	:extraOutputFile=AnyTypeCode\TAOA.cpp
+	:extraOutputFile=AnyTypeCode\TAOA.h
+	:extraOutputFile=TAOC.cpp
+	:extraOutputFile=TAOC.h
+	:extraOutputFile=TAOS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=TimeBase.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci TimeBase.pidl'
+	:extraOutputFile=AnyTypeCode\TimeBaseA.cpp
+	:extraOutputFile=AnyTypeCode\TimeBaseA.h
+	:extraOutputFile=TimeBaseC.cpp
+	:extraOutputFile=TimeBaseC.h
+	:extraOutputFile=TimeBaseS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=UInt8Seq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata --idl-version 4 UInt8Seq.pidl'
+	:extraOutputFile=AnyTypeCode\UInt8SeqA.cpp
+	:extraOutputFile=AnyTypeCode\UInt8SeqA.h
+	:extraOutputFile=UInt8SeqC.cpp
+	:extraOutputFile=UInt8SeqC.h
+	:extraOutputFile=UInt8SeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=ULongLongSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata ULongLongSeq.pidl'
+	:extraOutputFile=AnyTypeCode\ULongLongSeqA.cpp
+	:extraOutputFile=AnyTypeCode\ULongLongSeqA.h
+	:extraOutputFile=ULongLongSeqC.cpp
+	:extraOutputFile=ULongLongSeqC.h
+	:extraOutputFile=ULongLongSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=ULongSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata ULongSeq.pidl'
+	:extraOutputFile=AnyTypeCode\ULongSeqA.cpp
+	:extraOutputFile=AnyTypeCode\ULongSeqA.h
+	:extraOutputFile=ULongSeqC.cpp
+	:extraOutputFile=ULongSeqC.h
+	:extraOutputFile=ULongSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=UShortSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata UShortSeq.pidl'
+	:extraOutputFile=AnyTypeCode\UShortSeqA.cpp
+	:extraOutputFile=AnyTypeCode\UShortSeqA.h
+	:extraOutputFile=UShortSeqC.cpp
+	:extraOutputFile=UShortSeqC.h
+	:extraOutputFile=UShortSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=WCharSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata WCharSeq.pidl'
+	:extraOutputFile=AnyTypeCode\WCharSeqA.cpp
+	:extraOutputFile=AnyTypeCode\WCharSeqA.h
+	:extraOutputFile=WCharSeqC.cpp
+	:extraOutputFile=WCharSeqC.h
+	:extraOutputFile=WCharSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=WStringSeq.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci -Gse -Gata WStringSeq.pidl'
+	:extraOutputFile=AnyTypeCode\WStringSeqA.cpp
+	:extraOutputFile=AnyTypeCode\WStringSeqA.h
+	:extraOutputFile=WStringSeqC.cpp
+	:extraOutputFile=WStringSeqC.h
+	:extraOutputFile=WStringSeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=orb_types.pidl
+	:preexecShell='cd tao && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -SS -Sorb -GA -Gp -Gd -oA AnyTypeCode -Wb,export_macro=TAO_Export -Wb,export_include=tao/TAO_Export.h -Wb,anyop_export_macro=TAO_AnyTypeCode_Export -Wb,anyop_export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -Sci orb_types.pidl'
+	:extraOutputFile=AnyTypeCode\orb_typesA.cpp
+	:extraOutputFile=AnyTypeCode\orb_typesA.h
+	:extraOutputFile=orb_typesC.cpp
+	:extraOutputFile=orb_typesC.h
+	:extraOutputFile=orb_typesS.h
+example.cpp

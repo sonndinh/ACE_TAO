@@ -1,0 +1,64 @@
+#!gbuild
+#primaryTarget=ppc_integrity.tgt
+[Subproject]
+	-Ospeed
+	-OI
+	--exceptions
+	-L.
+tao_AnyTypeCode_tmp.cpp
+	:preExecShell='cd tao/AnyTypeCode && echo void fn() { return; } > tao_AnyTypeCode_tmp.cpp'
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=AnySeq.pidl
+	:preExecShell='cd tao/AnyTypeCode && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -Gp -Gd -Sci -SS -GA -Wb,export_macro=TAO_AnyTypeCode_Export -Wb,export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -iC tao/AnyTypeCode -Sorb AnySeq.pidl'
+	:extraOutputFile=AnySeqA.cpp
+	:extraOutputFile=AnySeqA.h
+	:extraOutputFile=AnySeqC.cpp
+	:extraOutputFile=AnySeqC.h
+	:extraOutputFile=AnySeqS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Bounds.pidl
+	:preExecShell='cd tao/AnyTypeCode && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -Gp -Gd -Sci -SS -GA -Wb,export_macro=TAO_AnyTypeCode_Export -Wb,export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -iC tao/AnyTypeCode Bounds.pidl'
+	:extraOutputFile=BoundsA.cpp
+	:extraOutputFile=BoundsA.h
+	:extraOutputFile=BoundsC.cpp
+	:extraOutputFile=BoundsC.h
+	:extraOutputFile=BoundsS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Dynamic.pidl
+	:preExecShell='cd tao/AnyTypeCode && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -Gp -Gd -Sci -SS -GA -Wb,export_macro=TAO_AnyTypeCode_Export -Wb,export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -iC tao/AnyTypeCode -Sorb Dynamic.pidl'
+	:extraOutputFile=DynamicA.cpp
+	:extraOutputFile=DynamicA.h
+	:extraOutputFile=DynamicC.cpp
+	:extraOutputFile=DynamicC.h
+	:extraOutputFile=DynamicS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Dynamic_Parameter.pidl
+	:preExecShell='cd tao/AnyTypeCode && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -Gp -Gd -Sci -SS -GA -Wb,export_macro=TAO_AnyTypeCode_Export -Wb,export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -iC tao/AnyTypeCode -Sorb Dynamic_Parameter.pidl'
+	:extraOutputFile=Dynamic_ParameterA.cpp
+	:extraOutputFile=Dynamic_ParameterA.h
+	:extraOutputFile=Dynamic_ParameterC.cpp
+	:extraOutputFile=Dynamic_ParameterC.h
+	:extraOutputFile=Dynamic_ParameterS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=ValueModifier.pidl
+	:preExecShell='cd tao/AnyTypeCode && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -Gp -Gd -Sci -SS -GA -Wb,export_macro=TAO_AnyTypeCode_Export -Wb,export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -iC tao/AnyTypeCode -Sorb ValueModifier.pidl'
+	:extraOutputFile=ValueModifierA.cpp
+	:extraOutputFile=ValueModifierA.h
+	:extraOutputFile=ValueModifierC.cpp
+	:extraOutputFile=ValueModifierC.h
+	:extraOutputFile=ValueModifierS.h
+
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Visibility.pidl
+	:preExecShell='cd tao/AnyTypeCode && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Wb,versioning_begin=TAO_BEGIN_VERSIONED_NAMESPACE_DECL -Wb,versioning_end=TAO_END_VERSIONED_NAMESPACE_DECL -Gp -Gd -Sci -SS -GA -Wb,export_macro=TAO_AnyTypeCode_Export -Wb,export_include=tao/AnyTypeCode/TAO_AnyTypeCode_Export.h -iC tao/AnyTypeCode -Sorb Visibility.pidl'
+	:extraOutputFile=VisibilityA.cpp
+	:extraOutputFile=VisibilityA.h
+	:extraOutputFile=VisibilityC.cpp
+	:extraOutputFile=VisibilityC.h
+	:extraOutputFile=VisibilityS.h
+	:postExecShell='cd tao/AnyTypeCode && del tao_AnyTypeCode_tmp.cpp'
+

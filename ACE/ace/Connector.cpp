@@ -255,17 +255,15 @@ ACE_Connector<SVC_HANDLER, PEER_CONNECTOR>::activate_svc_handler (SVC_HANDLER *s
 
   // See if we should enable non-blocking I/O on the <svc_handler>'s
   // peer.
+  // Green Hills INTEGRITY Simulator does not support fcntl
+  // on sockets which is used by the enable and disable calls.
+#if !defined (ACE_USES_GHS_ISIMPPC)
   if (ACE_BIT_ENABLED (this->flags_, ACE_NONBLOCK) != 0)
     {
-      // sonndinh: Green Hills INTEGRITY Simulator does not support fcntl
-      // on sockets which is used by the enable call.
-#if !defined (ACE_USES_GHS_ISIMPPC)
       if (svc_handler->peer ().enable (ACE_NONBLOCK) == -1)
         error = true;
-#endif
     }
   // Otherwise, make sure it's disabled by default.
-#if !defined (ACE_USES_GHS_ISIMPPC)
   else if (svc_handler->peer ().disable (ACE_NONBLOCK) == -1)
     error = true;
 #endif

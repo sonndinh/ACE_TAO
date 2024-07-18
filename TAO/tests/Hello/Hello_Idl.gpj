@@ -1,0 +1,22 @@
+#!gbuild
+#primaryTarget=ppc_integrity.tgt
+[Subproject]
+	-Ospeed
+	-OI
+	--exceptions
+	-L.
+# This temporary source file is created so that these commands are executed before the
+# file is compiled. The file doesn't need to exist before the commands are executed.
+# Indeed, it is created by a command below!
+# This is a trick that subprojects involving only processing idl files can use.
+tests_Hello_tmp.cpp
+	:preExecShell='cd tests/Hello && echo void fn() { return; } > tests_Hello_tmp.cpp'
+	:dependsRelative=$(HOST_ACE)\bin\tao_idl
+	:dependsRelative=Test.idl
+	:preExecShell='cd tests/Hello && set PATH=%PATH%;C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.39.33519\\bin\\Hostx86\\x86; && ..\\..\\..\\host\\ACE_TAO\\ACE\\bin\\tao_idl -Wb,pre_include=ace/pre.h -Wb,post_include=ace/post.h -I ..\\.. -Sa -St -Sp Test.idl'
+	:extraOutputFile=TestC.cpp
+	:extraOutputFile=TestC.h
+	:extraOutputFile=TestC.inl
+	:extraOutputFile=TestS.cpp
+	:extraOutputFile=TestS.h
+	:postExecShell='cd tests/Hello && del tests_Hello_tmp.cpp'
