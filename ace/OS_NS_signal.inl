@@ -56,7 +56,7 @@ sigaction (int signum, const struct sigaction *nsa, struct sigaction *osa)
   else
     osa->sa_handler = ::signal (signum, nsa->sa_handler);
   return osa->sa_handler == SIG_ERR ? -1 : 0;
-#elif defined (CHORUS) || defined (ACE_HAS_WINCE) || defined(ACE_PSOS)
+#elif defined (CHORUS) || defined (ACE_HAS_WINCE) || defined (ACE_PSOS) || !defined (ACE_HAS_SIGACTION)
   ACE_UNUSED_ARG (signum);
   ACE_UNUSED_ARG (nsa);
   ACE_UNUSED_ARG (osa);
@@ -86,16 +86,18 @@ sigaddset (sigset_t *s, int signum)
       errno = EINVAL;
       return -1;                 // Invalid signum, return error
     }
-#   if defined (ACE_PSOS) && defined (__DIAB) && ! defined(ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
+# if defined (ACE_PSOS) && defined (__DIAB) && ! defined(ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   // treat 0th u_long of sigset_t as high bits,
   // and 1st u_long of sigset_t as low bits.
   if (signum <= ACE_BITS_PER_ULONG)
     s->s[1] |= (1 << (signum - 1));
   else
     s->s[0] |= (1 << (signum - ACE_BITS_PER_ULONG - 1));
-#   else
-  *s |= (1 << (signum - 1)) ;
-#   endif /* defined (ACE_PSOS) && defined (__DIAB) */
+# elif defined (ghs)
+  (*s)._A(sigbits)[0] |= (1 << (signum - 1));
+# else
+  *s |= (1 << (signum - 1));
+# endif /* defined (ACE_PSOS) && defined (__DIAB) */
   return 0 ;
 #else
   ACE_OSCALL_RETURN (::sigaddset (s, signum), int, -1);
@@ -116,16 +118,18 @@ sigdelset (sigset_t *s, int signum)
       errno = EINVAL;
       return -1;                 // Invalid signum, return error
     }
-#   if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
+# if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   // treat 0th u_long of sigset_t as high bits,
   // and 1st u_long of sigset_t as low bits.
   if (signum <= ACE_BITS_PER_ULONG)
     s->s[1] &= ~(1 << (signum - 1));
   else
     s->s[0] &= ~(1 << (signum - ACE_BITS_PER_ULONG - 1));
-#   else
-  *s &= ~(1 << (signum - 1)) ;
-#   endif /* defined (ACE_PSOS) && defined (__DIAB) */
+# elif defined (ghs)
+  (*s)._A(sigbits)[0] &= ~(1 << (signum - 1));
+# else
+  *s &= ~(1 << (signum - 1));
+# endif /* defined (ACE_PSOS) && defined (__DIAB) */
   return 0;
 #else
   ACE_OSCALL_RETURN (::sigdelset (s, signum), int, -1);
@@ -141,12 +145,15 @@ sigemptyset (sigset_t *s)
       errno = EFAULT;
       return -1;
     }
-#   if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
+# if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   s->s[0] = 0;
   s->s[1] = 0;
-#   else
+# elif defined (ghs)
+  (*s)._A(sigbits)[0] = 0;
+  (*s)._A(sigbits)[1] = 0;
+# else
   *s = 0 ;
-#   endif /* defined (ACE_PSOS) && defined (__DIAB) */
+# endif /* defined (ACE_PSOS) && defined (__DIAB) */
   return 0 ;
 #else
   ACE_OSCALL_RETURN (::sigemptyset (s), int, -1);
@@ -162,12 +169,15 @@ sigfillset (sigset_t *s)
       errno = EFAULT;
       return -1;
     }
-#   if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
+# if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   s->s[0] = ~(u_long) 0;
   s->s[1] = ~(u_long) 0;
-#   else
+# elif defined (ghs)
+  (*s)._A(sigbits)[0] = ~(unsigned int) 0;
+  (*s)._A(sigbits)[1] = ~(unsigned int) 0;
+# else
   *s = ~(sigset_t) 0;
-#   endif /* defined (ACE_PSOS) && defined (__DIAB) */
+# endif /* defined (ACE_PSOS) && defined (__DIAB) */
   return 0 ;
 #else
   ACE_OSCALL_RETURN (::sigfillset (s), int, -1);
@@ -188,16 +198,19 @@ sigismember (sigset_t *s, int signum)
       errno = EINVAL;
       return -1;                 // Invalid signum, return error
     }
-#   if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
+# if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   // treat 0th u_long of sigset_t as high bits,
   // and 1st u_long of sigset_t as low bits.
   if (signum <= ACE_BITS_PER_ULONG)
     return ((s->s[1] & (1 << (signum - 1))) != 0);
   else
     return ((s->s[0] & (1 << (signum - ACE_BITS_PER_ULONG - 1))) != 0);
-#   else
-  return ((*s & (1 << (signum - 1))) != 0) ;
-#   endif /* defined (ACE_PSOS) && defined (__DIAB) */
+# elif defined (ghs)
+  return ((*s)._A(sigbits)[0] & (1 << (signum - 1))) != 0 ||
+    ((*s)._A(sigbits)[1] & (1 << (signum - 1))) != 0;
+# else
+  return ((*s & (1 << (signum - 1))) != 0);
+# endif /* defined (ACE_PSOS) && defined (__DIAB) */
 #else
 #  if defined (ACE_HAS_SIGISMEMBER_BUG)
   if (signum < 1 || signum >= ACE_NSIG)

@@ -277,6 +277,15 @@ namespace ACE_OS {
                      ACE_SOCK_GROUP g,
                      u_long flags);
 
+  /// Create a socket handle using Green Hills Software's LEONET network stack.
+  /// Call the BSD-style <socket> if the OS platform doesn't support it.
+  ACE_NAMESPACE_INLINE_FUNCTION
+  ACE_HANDLE socket(int protocol_family,
+                    int type,
+                    int proto,
+                    int priority,
+                    int buffer_size);
+
   ACE_NAMESPACE_INLINE_FUNCTION
   int socketpair (int domain,
                   int type,

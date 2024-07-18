@@ -267,6 +267,7 @@ ACE_Connector<SVC_HANDLER, ACE_PEER_CONNECTOR_2>::activate_svc_handler (SVC_HAND
 
   // See if we should enable non-blocking I/O on the <svc_handler>'s
   // peer.
+#if !defined (ACE_USES_GHS_ISIMPPC)
   if (ACE_BIT_ENABLED (this->flags_, ACE_NONBLOCK) != 0)
     {
       if (svc_handler->peer ().enable (ACE_NONBLOCK) == -1)
@@ -275,6 +276,7 @@ ACE_Connector<SVC_HANDLER, ACE_PEER_CONNECTOR_2>::activate_svc_handler (SVC_HAND
   // Otherwise, make sure it's disabled by default.
   else if (svc_handler->peer ().disable (ACE_NONBLOCK) == -1)
     error = 1;
+#endif
 
   // We are connected now, so try to open things up.
   if (error || svc_handler->open ((void *) this) == -1)

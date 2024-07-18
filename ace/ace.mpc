@@ -2,9 +2,15 @@
 // $Id$
 
 project(ACE) : acedefaults, core, other, codecs, token, svcconf, uuid, filecache, pkgconfig {
-  libout       = $(ACE_ROOT)/lib
-  sharedname   = ACE
-  dynamicflags = ACE_BUILD_DLL
+
+  specific(ghs) {
+    staticname = ACE
+    libout = lib
+  } else {
+    sharedname   = ACE
+    dynamicflags = ACE_BUILD_DLL
+    libout       = $(ACE_ROOT)/lib
+  }
 
   // Old OS files.  put these back and remove the OS_NS*, Cleanup.cpp, and
   // Object_Manager_Base.cpp to improve compile times at the cost of

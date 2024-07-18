@@ -726,10 +726,12 @@ ACE_Select_Reactor_Notify::open (ACE_Reactor_Impl *r,
 
       // There seems to be a Win32 bug with this...  Set this into
       // non-blocking mode.
+#if !defined (ACE_USES_GHS_ISIMPPC)
       if (ACE::set_flags (this->notification_pipe_.read_handle (),
                           ACE_NONBLOCK) == -1)
         return -1;
       else
+#endif
         return this->select_reactor_->register_handler
           (this->notification_pipe_.read_handle (),
            this,

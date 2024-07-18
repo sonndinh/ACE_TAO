@@ -23,6 +23,33 @@ typedef char *ACE_SOCKOPT_TYPE1;
 typedef const char *ACE_SOCKOPT_TYPE1;
 #endif /* ACE_HAS_VOIDPTR_SOCKOPT */
 
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+namespace
+{
+  // Convert from a POSIX socket address structure to a structure used in LEONET.
+  void to_leonet_address (const struct sockaddr* posix_addr, SockAddr_t& leonet_addr)
+  {
+    const struct sockaddr_in* const posix_addr_in = (const struct sockaddr_in*) posix_addr;
+
+    // What should the Len and Spare fields be?
+    leonet_addr.Len = sizeof (SockAddr_t);
+    leonet_addr.Family = addr_in->sin_family;
+    leonet_addr.Port = addr_in->sin_port;
+    leonet_addr.Address = addr_in->sin_addr.s_addr;
+    leonet_addr.Spare[0] = 0;
+    leonet_addr.Spare[1] = 0;
+  }
+
+  void from_leonet_address (const SockAddr_t& leonet_addr, struct sockaddr* posix_addr)
+  {
+    struct sockaddr_in* posix_addr_in = (struct sockaddr_in*) posix_addr;
+    posix_addr->sin_family = leonet_addr.Family;
+    posix_addr->sin_port = leonet_addr.Port;
+    posix_addr->sin_addr.s_addr = leonet_addr.Address;
+  }
+}
+#endif /* ghs && ACE_USES_GHS_LEONET */
+
 ACE_INLINE ACE_HANDLE
 ACE_OS::accept (ACE_HANDLE handle,
                 struct sockaddr *addr,
@@ -60,6 +87,19 @@ ACE_OS::accept (ACE_HANDLE handle,
                                  (ACE_SOCKET_LEN *) addrlen),
                        ACE_HANDLE,
                        ACE_INVALID_HANDLE);
+#  elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t client_name;
+  INT4 handle_out = ACE_INVALID_HANDLE;
+  const INT4 ret = ::Tcp_Accept (handle, &client_name, &handle_out);
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  if (addr != 0 && addrlen != 0) {
+    from_leonet_address(client_name, addr);
+    *addrlen = sizeof (struct sockaddr_in);
+  }
+  // In case of DONE, is handle_out the socket connected to the client, not the listening socket?
+  return handle_out;
 #  else
 #    if defined (ACE_HAS_BROKEN_ACCEPT_ADDR)
   // Apparently some platforms like VxWorks can't correctly deal with
@@ -112,6 +152,16 @@ ACE_OS::bind (ACE_HANDLE handle, struct sockaddr *addr, int addrlen)
                                (struct sockaddr_in *) addr,
                                (ACE_SOCKET_LEN) addrlen),
                        int, -1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (addrlen);
+  SockAddr_t socket_name;
+  if (!addr) {
+    errno = EDESTADDRREQ;
+    return -1;
+  }
+  to_leonet_address (addr, socket_name);
+  const INT4 ret = ::Bind (handle, socket_name);
+  return ret == PENDING ? 0 : -1;
 #else /* !defined (ACE_PSOS) || defined (ACE_PSOS_DIAB_PPC) */
   ACE_SOCKCALL_RETURN (::bind ((ACE_SOCKET) handle,
                                addr,
@@ -126,6 +176,9 @@ ACE_OS::closesocket (ACE_HANDLE handle)
 #if defined (ACE_WIN32)
   ACE_OS::shutdown (handle, ACE_SHUTDOWN_WRITE);
   ACE_SOCKCALL_RETURN (::closesocket ((SOCKET) handle), int, -1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  const INT4 ret = ::Tcp_Close (handle);
+  return ret == DONE ? 0 : -1;
 #elif defined (ACE_PSOS_DIAB_PPC)
   ACE_OSCALL_RETURN (::pna_close (handle), int, -1);
 #else
@@ -144,6 +197,17 @@ ACE_OS::connect (ACE_HANDLE handle,
                                   (struct sockaddr_in *) addr,
                                   (ACE_SOCKET_LEN) addrlen),
                        int, -1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (addrlen);
+  SockAddr_t remote_addr;
+  if (!addr) {
+    // Connect call requires a remote address,
+    // but it's valid to pass a null addr to the connect call, so don't need to set errno.
+    return -1;
+  }
+  to_leonet_address (addr, remote_addr);
+  const INT4 ret = ::Connect (handle, remote_addr);
+  return ret == PENDING ? 0 : -1;
 #else  /* !defined (ACE_PSOS) || defined (ACE_PSOS_DIAB_PPC) */
   ACE_SOCKCALL_RETURN (::connect ((ACE_SOCKET) handle,
                                   addr,
@@ -178,8 +242,17 @@ ACE_OS::getpeername (ACE_HANDLE handle, struct sockaddr *addr,
 {
   ACE_OS_TRACE ("ACE_OS::getpeername");
 
-#if defined (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO) \
-         && (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO == 1)
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t peer_name;
+  const INT4 ret = ::GetPeerName (handle, &peer_name);
+  if (ret != PENDING) {
+    return -1;
+  }
+  from_leonet_address (peer_name, addr);
+  *addrlen = sizeof (struct sockaddr_in);
+  return 0;
+#elif defined (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO) \
+           && (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO == 1)
   int result;
 #  if defined (ACE_PSOS) && !defined ACE_PSOS_DIAB_PPC
   ACE_SOCKCALL (::getpeername ((ACE_SOCKET) handle,
@@ -238,8 +311,17 @@ ACE_OS::getsockname (ACE_HANDLE handle,
                      int *addrlen)
 {
   ACE_OS_TRACE ("ACE_OS::getsockname");
-#if defined (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO) \
-         && (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO == 1)
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t sock_name;
+  const INT4 ret = ::GetSocketName (handle, &sock_name);
+  if (ret != PENDING) {
+    return -1;
+  }
+  from_leonet_address (sock_name, addr);
+  *addrlen = sizeof (struct sockaddr_in);
+  return 0;
+#elif defined (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO) \
+           && (ACE_GETNAME_RETURNS_RANDOM_SIN_ZERO == 1)
   int result;
 #  if defined (ACE_PSOS) && !defined (ACE_PSOS_DIAB_PPC)
   ACE_SOCKCALL (::getsockname ((ACE_SOCKET) handle,
@@ -296,6 +378,18 @@ ACE_OS::getsockopt (ACE_HANDLE handle,
                     int *optlen)
 {
   ACE_OS_TRACE ("ACE_OS::getsockopt");
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (level);
+  OptVal_t opt_value;
+  const INT4 ret = ::GetSocketOpt (handle, optname, &opt_value);
+  if (ret != PENDING) {
+    return -1;
+  }
+  // How are the fields in OptVal_t mapped to optval and optlen?
+  *optval = opt_value.Character;
+  *optlen = sizeof (char);
+  return 0;
+#else
   ACE_SOCKCALL_RETURN (::getsockopt ((ACE_SOCKET) handle,
                                      level,
                                      optname,
@@ -303,13 +397,19 @@ ACE_OS::getsockopt (ACE_HANDLE handle,
                                      (ACE_SOCKET_LEN *) optlen),
                        int,
                        -1);
+#endif
 }
 
 ACE_INLINE int
 ACE_OS::listen (ACE_HANDLE handle, int backlog)
 {
   ACE_OS_TRACE ("ACE_OS::listen");
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  const INT4 ret = ::Listen (handle);
+  return ret == PENDING ? 0 : -1;
+#else
   ACE_SOCKCALL_RETURN (::listen ((ACE_SOCKET) handle, backlog), int, -1);
+#endif
 }
 
 ACE_INLINE int
@@ -329,6 +429,14 @@ ACE_OS::recv (ACE_HANDLE handle, char *buf, size_t len, int flags)
 #if defined (ACE_WIN32)
   ACE_SOCKCALL_RETURN (::recv ((ACE_SOCKET) handle, buf,
                                static_cast<int> (len), flags), int, -1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  UINT4 read_len = 0;
+  // Does Recv expect the same set of flags?
+  const INT4 ret = ::Recv (handle, (Address)buf, len, &read_len, static_cast<UINT4>(flags));
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  return read_len;
 #else
   int ace_result_;
   ace_result_ = ::recv ((ACE_SOCKET) handle, buf, len, flags);
@@ -391,6 +499,18 @@ ACE_OS::recvfrom (ACE_HANDLE handle,
     }
   else
     return result;
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t from_addr;
+  UINT4 read_len = 0;
+  const INT4 ret = ::RecvFrom (handle, (Address)buf, len, &from_addr, &read_len, static_cast<UINT4>(flags));
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  if (addr != 0 && addrlen != 0) {
+    from_leonet_address (from_addr, addr);
+    *addrlen = sizeof (struct sockaddr_in);
+  }
+  return read_len;
 #else /* non Win32 and non PSOS */
   ACE_SOCKCALL_RETURN (::recvfrom ((ACE_SOCKET) handle, buf, len, flags,
                                    addr, (ACE_SOCKET_LEN *) addrlen),
@@ -556,6 +676,14 @@ ACE_OS::send (ACE_HANDLE handle, const char *buf, size_t len, int flags)
                                buf,
                                static_cast<int> (len),
                                flags), int, -1);
+#elif defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (flags);
+  UINT4 sent_len = 0;
+  const INT4 ret = ::Send (handle, (Address)buf, len, sent_len);
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  return sent_len;
 #else
   int ace_result_;
 #  if defined (ACE_PSOS)
@@ -635,7 +763,16 @@ ACE_OS::sendto (ACE_HANDLE handle,
                 int addrlen)
 {
   ACE_OS_TRACE ("ACE_OS::sendto");
-#if defined (VXWORKS)
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  SockAddr_t to_addr;
+  to_leonet_address (addr, to_addr);
+  UINT4 sent_len = 0;
+  const INT4 ret = ::SendTo (handle, (Address)buf, len, to_addr, &sent_len);
+  if (ret != DONE && ret != PENDING) {
+    return -1;
+  }
+  return sent_len;
+#elif defined (VXWORKS)
   ACE_SOCKCALL_RETURN (::sendto ((ACE_SOCKET) handle,
                                  const_cast <char *> (buf),
                                  len,
@@ -825,8 +962,19 @@ ACE_OS::setsockopt (ACE_HANDLE handle,
                     int optlen)
 {
   ACE_OS_TRACE ("ACE_OS::setsockopt");
-
-  #if defined (ACE_HAS_WINSOCK2) && (ACE_HAS_WINSOCK2 != 0) && defined(SO_REUSEPORT)
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (level);
+  ACE_UNUSED_ARG (optlen);
+  if (!optval) {
+    return -1;
+  }
+  // TODO(sonndinh): Set the other fields of opt_value
+  OptVal_t opt_value;
+  opt_value.Character = *optval;
+  const INT4 ret = ::SetSocketOpt (handle, optname, &opt_value);
+  return ret == PENDING ? 0 : -1;
+#else
+# if defined (ACE_HAS_WINSOCK2) && (ACE_HAS_WINSOCK2 != 0) && defined(SO_REUSEPORT)
   // To work around an inconsistency with Microsofts implementation of
   // sockets, we will check for SO_REUSEADDR, and ignore it. Winsock
   // always behaves as if SO_REUSEADDR=1. Some implementations have
@@ -845,7 +993,7 @@ ACE_OS::setsockopt (ACE_HANDLE handle,
       optname = SO_REUSEADDR;
     }
   }
-  #endif /*ACE_HAS_WINSOCK2*/
+# endif /*ACE_HAS_WINSOCK2*/
 
   ACE_SOCKCALL_RETURN (::setsockopt ((ACE_SOCKET) handle,
                                      level,
@@ -854,6 +1002,7 @@ ACE_OS::setsockopt (ACE_HANDLE handle,
                                      optlen),
                        int,
                        -1);
+#endif
 }
 
 ACE_INLINE int
@@ -904,6 +1053,42 @@ ACE_OS::socket (int domain,
                          type,
                          proto);
 #endif /* ACE_HAS_WINSOCK2 */
+}
+
+ACE_INLINE ACE_HANDLE
+ACE_OS::socket (int domain,
+                int type,
+                int proto,
+                int priority,
+                int buffer_size)
+{
+  ACE_OS_TRACE ("ACE_OS::socket");
+
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+  ACE_UNUSED_ARG (domain);
+  ACE_UNUSED_ARG (proto);
+
+  UINT4 socket_type = 0;
+  if (type == SOCK_STREAM) {
+    socket_type = PROTO_TCP;
+  } else if (type == SOCK_DGRAM) {
+    socket_type = PROTO_UDP;
+  } else {
+    return ACE_INVALID_HANDLE;
+  }
+
+  INT4 handle = ACE_INVALID_HANDLE;
+  const INT4 ret = ::Socket(socket_type, priority, buffer_size, &handle);
+  if (ret != DONE) {
+    return ACE_INVALID_HANDLE;
+  }
+  return handle;
+#else
+  ACE_UNUSED_ARG (priority);
+  ACE_UNUSED_ARG (buffer_size);
+
+  return ACE_OS::socket (domain, type, proto);
+#endif /* ghs && ACE_USES_GHS_LEONET */
 }
 
 ACE_INLINE int
