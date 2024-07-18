@@ -36,6 +36,10 @@
 #  endif /* ACE_HAS_AIX_BROKEN_SOCKET_HEADER */
 #endif /* !ACE_LACKS_SYS_SOCKET_H */
 
+#if defined (ghs) && defined (ACE_USES_GHS_LEONET)
+#  include  <tcp-ip_interface.h>
+#endif /* ghs && ACE_USES_GHS_LEONET */
+
 #if defined (VXWORKS)
 #  include /**/ <sockLib.h>
 #endif /* VXWORKS */
