@@ -235,11 +235,12 @@ ACE_OS::mktemp (wchar_t *s)
 
 #endif /* !ACE_LACKS_MKTEMP */
 
-#if defined(INTEGRITY)
-extern "C" {
-  int putenv(char *string);
-}
-#endif
+// This causes "more than one instance of overloaded fucntion" compile error.
+//#if defined(INTEGRITY)
+//extern "C" {
+//  int putenv(char *string);
+//}
+//#endif
 
 ACE_INLINE int
 ACE_OS::putenv (const char *string)

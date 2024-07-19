@@ -18,7 +18,7 @@ ACE_RCSID(ace, OS_NS_sys_utsname, "$Id$")
 #  include /**/ <sysLib.h> 
 #endif /* VXWORKS */
 
-#if defined (ACE_WIN32) || defined (VXWORKS) || defined (CHORUS) || defined (ACE_PSOS) || defined (ghs)
+#if defined (ACE_WIN32) || defined (VXWORKS) || defined (CHORUS) || defined (ACE_PSOS)
 // Don't inline on those platforms because this function contains
 // string literals, and some compilers, e.g., g++, don't handle those
 // efficiently in unused inline functions.

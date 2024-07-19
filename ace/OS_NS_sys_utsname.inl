@@ -19,9 +19,9 @@ namespace ACE_OS
       return -1;
     }
     strcpy(name->sysname,"INTEGRITY");
-    int status = gethostname(name->nodename,_SYS_NMLN);
-    strcpy(name->release,"4.0");
-    strcpy(name->version,"4.0.9");
+    int status = gethostname(name->nodename, __SYS_NMLN);
+    strcpy(name->release,"minor");
+    strcpy(name->version,"11.4.6");
     strcpy(name->machine,"a standard name");
     return status;
 #else

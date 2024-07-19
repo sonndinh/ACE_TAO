@@ -40,9 +40,10 @@
 #define ACE_HAS_TEMPLATE_TYPEDEFS
 #define TAO_USE_SEQUENCE_TEMPLATES
 #define ACE_HAS_USING_KEYWORD
+#define ACE_HAS_TYPENAME_KEYWORD
 #define ACE_NEEDS_FUNC_DEFINITIONS
 #define _REENTRANT
-#define ACE_MT_SAFE 1
+//#define ACE_MT_SAFE 1
 
 // Compiler/platform has correctly prototyped header files.
 #define ACE_HAS_CPLUSPLUS_HEADERS
@@ -80,7 +81,7 @@
 /****** SYSV_IPC STUFF *****/
 #define ACE_LACKS_KEY_T
 
-#define ACE_HAS_WCHAR
+//#define ACE_HAS_WCHAR
 #define ACE_LACKS_ISCTYPE
 #define ACE_LACKS_WCSICMP
 #define ACE_LACKS_WCSNICMP
@@ -160,6 +161,12 @@
 #define ACE_LACKS_SYS_SEM_H
 #define ACE_LACKS_STROPTS_H
 #define ACE_LACKS_SYS_SHM_H
+#define ACE_LACKS_MEMORY_H
+
+// Try fixing a compile error involving scxx/fstream,
+// line 398: expected an identifier for fileno
+//#define ACE_LACKS_ACE_IOSTREAM
+#define ACE_LACKS_IOSTREAM_TOTALLY
 
 /***** Network utility functions *****/
 #define ACE_LACKS_GETADDRINFO

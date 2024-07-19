@@ -52,7 +52,7 @@ typedef double ACE_timer_t;
 # endif /* ACE_LACKS_FLOATING_POINT */
 
 // todo: don't forget to clean this up!  ;-)
-#if !defined (ACE_HAS_CLOCK_GETTIME) && !(defined (_CLOCKID_T_) || defined (_CLOCKID_T))
+#if !defined (ACE_HAS_CLOCK_GETTIME) && !(defined (_CLOCKID_T_) || defined (_CLOCKID_T)) && !defined (ghs)
    typedef int clockid_t;
 #  if !defined (CLOCK_REALTIME)
 #    define CLOCK_REALTIME 0
