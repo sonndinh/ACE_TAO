@@ -93,7 +93,16 @@
 
 /****** Posix Defines *****/
 #define ACE_LACKS_KILL
-#define ACE_LACKS_SIGSET
+
+// These mean the platform has prototypes in header files
+// for these functions.
+#define ACE_HAS_SIGWAIT
+#define ACE_HAS_PTHREAD_SIGMASK_PROTO
+
+// This should be ACE_LACKS_SIGSET_T. Since INTEGRITY has
+// sigset_t, this is not defined.
+//#define ACE_LACKS_SIGSET
+
 #define ACE_LACKS_SUSECONDS_T
 #define ACE_LACKS_USECONDS_T
 #define ACE_LACKS_WAIT
