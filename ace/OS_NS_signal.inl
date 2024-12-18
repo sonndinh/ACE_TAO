@@ -10,7 +10,7 @@ ACE_INLINE int
 kill (pid_t pid, int signum)
 {
   ACE_OS_TRACE ("ACE_OS::kill");
-#if defined (ACE_WIN32) || defined (CHORUS) || defined (ACE_PSOS)
+#if defined (ACE_WIN32) || defined (CHORUS) || defined (ACE_PSOS) || defined (ACE_LACKS_KILL)
   ACE_UNUSED_ARG (pid);
   ACE_UNUSED_ARG (signum);
   ACE_NOTSUP_RETURN (-1);
@@ -75,7 +75,14 @@ ACE_INLINE int
 sigaddset (sigset_t *s, int signum)
 {
   ACE_OS_TRACE ("ACE_OS::sigaddset");
-#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
+#if defined (ghs) && defined (ACE_LACKS_SIGADDSET)
+  ACE_UNUSED_ARG (s);
+  ACE_UNUSED_ARG (signum);
+  ACE_NOTSUP_RETURN (-1);
+  // dinhs: the compiler doesn't recognize the _A(x) macro in signal.h
+//  (*s)._A(sigbits)[0] |= (1 << (signum - 1));
+//  return 0;
+#elif defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
   if (s == 0)
     {
       errno = EFAULT;
@@ -93,8 +100,6 @@ sigaddset (sigset_t *s, int signum)
     s->s[1] |= (1 << (signum - 1));
   else
     s->s[0] |= (1 << (signum - ACE_BITS_PER_ULONG - 1));
-# elif defined (ghs)
-  (*s)._A(sigbits)[0] |= (1 << (signum - 1));
 # else
   *s |= (1 << (signum - 1));
 # endif /* defined (ACE_PSOS) && defined (__DIAB) */
@@ -107,7 +112,14 @@ sigaddset (sigset_t *s, int signum)
 ACE_INLINE int
 sigdelset (sigset_t *s, int signum)
 {
-#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
+#if defined (ghs) && defined (ACE_LACKS_SIGDELSET)
+  ACE_UNUSED_ARG (s);
+  ACE_UNUSED_ARG (signum);
+  ACE_NOTSUP_RETURN (-1);
+  // dinhs: the compiler doesn't recognize the _A(x) macro in signal.h
+//  (*s)._A(sigbits)[0] &= ~(1 << (signum - 1));
+//  return 0;
+#elif defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
   if (s == 0)
     {
       errno = EFAULT;
@@ -125,8 +137,6 @@ sigdelset (sigset_t *s, int signum)
     s->s[1] &= ~(1 << (signum - 1));
   else
     s->s[0] &= ~(1 << (signum - ACE_BITS_PER_ULONG - 1));
-# elif defined (ghs)
-  (*s)._A(sigbits)[0] &= ~(1 << (signum - 1));
 # else
   *s &= ~(1 << (signum - 1));
 # endif /* defined (ACE_PSOS) && defined (__DIAB) */
@@ -139,7 +149,14 @@ sigdelset (sigset_t *s, int signum)
 ACE_INLINE int
 sigemptyset (sigset_t *s)
 {
-#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
+#if defined (ghs) && defined (ACE_LACKS_SIGEMPTYSET)
+  ACE_UNUSED_ARG (s);
+  ACE_NOTSUP_RETURN (-1);
+  // dinhs: The compiler doesn't recognize macro _A(x) defined in signal.h
+//  (*s)._A(sigbits)[0] = 0;
+//  (*s)._A(sigbits)[1] = 0;
+//  return 0;
+#elif defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
   if (s == 0)
     {
       errno = EFAULT;
@@ -148,9 +165,6 @@ sigemptyset (sigset_t *s)
 # if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   s->s[0] = 0;
   s->s[1] = 0;
-# elif defined (ghs)
-  (*s)._A(sigbits)[0] = 0;
-  (*s)._A(sigbits)[1] = 0;
 # else
   *s = 0 ;
 # endif /* defined (ACE_PSOS) && defined (__DIAB) */
@@ -163,7 +177,14 @@ sigemptyset (sigset_t *s)
 ACE_INLINE int
 sigfillset (sigset_t *s)
 {
-#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
+#if defined (ghs) && defined (ACE_LACKS_SIGFILLSET)
+  ACE_UNUSED_ARG (s);
+  ACE_NOTSUP_RETURN (-1);
+  // dinhs: The compiler doesn't recognize macro _A(x) defined in signal.h
+//  (*s)._A(sigbits)[0] = ~(unsigned int) 0;
+//  (*s)._A(sigbits)[1] = ~(unsigned int) 0;
+//  return 0;
+#elif defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
   if (s == 0)
     {
       errno = EFAULT;
@@ -172,9 +193,6 @@ sigfillset (sigset_t *s)
 # if defined (ACE_PSOS) && defined (__DIAB) && ! defined (ACE_PSOS_DIAB_MIPS) && !defined (ACE_PSOS_DIAB_PPC)
   s->s[0] = ~(u_long) 0;
   s->s[1] = ~(u_long) 0;
-# elif defined (ghs)
-  (*s)._A(sigbits)[0] = ~(unsigned int) 0;
-  (*s)._A(sigbits)[1] = ~(unsigned int) 0;
 # else
   *s = ~(sigset_t) 0;
 # endif /* defined (ACE_PSOS) && defined (__DIAB) */
@@ -187,7 +205,14 @@ sigfillset (sigset_t *s)
 ACE_INLINE int
 sigismember (sigset_t *s, int signum)
 {
-#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
+#if defined (ghs) && defined (ACE_LACKS_SIGISMEMBER)
+  ACE_UNUSED_ARG (s);
+  ACE_UNUSED_ARG (signum);
+  ACE_NOTSUP_RETURN (-1);
+  // dinhs: The compiler doesn't recognize macro _A(x) defined in signal.h
+//  return ((*s)._A(sigbits)[0] & (1 << (signum - 1))) != 0 ||
+//    ((*s)._A(sigbits)[1] & (1 << (signum - 1))) != 0;
+#elif defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
   if (s == 0)
     {
       errno = EFAULT;
@@ -205,9 +230,6 @@ sigismember (sigset_t *s, int signum)
     return ((s->s[1] & (1 << (signum - 1))) != 0);
   else
     return ((s->s[0] & (1 << (signum - ACE_BITS_PER_ULONG - 1))) != 0);
-# elif defined (ghs)
-  return ((*s)._A(sigbits)[0] & (1 << (signum - 1))) != 0 ||
-    ((*s)._A(sigbits)[1] & (1 << (signum - 1))) != 0;
 # else
   return ((*s & (1 << (signum - 1))) != 0);
 # endif /* defined (ACE_PSOS) && defined (__DIAB) */
@@ -255,7 +277,8 @@ signal (int signum, ACE_SignalHandler func)
 ACE_INLINE int
 sigprocmask (int how, const sigset_t *nsp, sigset_t *osp)
 {
-#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS)
+#if defined (ACE_LACKS_SIGSET) || defined (ACE_LACKS_SIGSET_DEFINITIONS) || \
+  (defined (ghs) && defined (ACE_LACKS_SIGPROCMASK))
   ACE_UNUSED_ARG (how);
   ACE_UNUSED_ARG (nsp);
   ACE_UNUSED_ARG (osp);

@@ -9,7 +9,10 @@ ACE_INLINE unsigned long
 ACE_OS::inet_addr (const char *name)
 {
   ACE_OS_TRACE ("ACE_OS::inet_addr");
-#if defined (ACE_PSOS)
+#if defined (ACE_LACKS_INET_ADDR)
+  ACE_UNUSED_ARG (name);
+  return INADDR_NONE;
+#elif defined (ACE_PSOS)
 
   u_long ret = 0;
   u_int segment;
@@ -55,9 +58,14 @@ ACE_INLINE char *
 ACE_OS::inet_ntoa (const struct in_addr addr)
 {
   ACE_OS_TRACE ("ACE_OS::inet_ntoa");
+#if defined (ACE_LACKS_INET_NTOA)
+  ACE_UNUSED_ARG (addr);
+  ACE_NOTSUP_RETURN (0);
+#else
   ACE_OSCALL_RETURN (::inet_ntoa (addr),
                      char *,
                      0);
+#endif
 }
 #endif /* defined (ACE_PSOS) */
 

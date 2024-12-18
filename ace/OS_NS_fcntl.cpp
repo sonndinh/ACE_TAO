@@ -154,6 +154,10 @@ ACE_OS::open (const char *filename,
   return static_cast<ACE_HANDLE> (handle);
 # endif /* defined (ACE_PSOS_LACKS_PHILE) */
 #elif defined (INTEGRITY)
+# if defined (INTEGRITY178B)
+  ACE_UNUSED_ARG (sa);
+  ACE_OSCALL_RETURN (::open (filename, mode, perms), ACE_HANDLE, -1);
+# else
   ACE_UNUSED_ARG (sa);
   if(!strcmp(filename,ACE_DEV_NULL)) {
       ACE_OSCALL_RETURN (::AllocateNullConsoleDescriptor(), ACE_HANDLE, -1);
@@ -161,6 +165,7 @@ ACE_OS::open (const char *filename,
   else {
       ACE_OSCALL_RETURN (::open (filename, mode, perms), ACE_HANDLE, -1);
   }
+# endif /* INTEGRITY178B */
 #else
   ACE_UNUSED_ARG (sa);
   ACE_OSCALL_RETURN (::open (filename, mode, perms), ACE_HANDLE, ACE_INVALID_HANDLE);

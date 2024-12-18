@@ -230,17 +230,6 @@ ACE_OS::uname (ACE_utsname *name)
   ACE_OS::strcpy (name->release, "???");
   ACE_OS::strcpy (name->version, buf);
   ACE_OS::strcpy (name->machine, "PPC 405");  // a bit of a hack
-#elif defined (ghs)
-  if(!name) {
-    errno = EFAULT;
-    return -1;
-  }
-  strcpy(name->sysname,"INTEGRITY");
-  int status = gethostname(name->nodename, __SYS_NMLN);
-  strcpy(name->release,"minor");
-  strcpy(name->version,"11.4.6");
-  strcpy(name->machine,"a standard name");
-  return status;
 #endif /* ACE_WIN32 */
 }
 #endif /* ACE_WIN32 || VXWORKS */

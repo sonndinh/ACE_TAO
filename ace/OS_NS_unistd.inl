@@ -69,13 +69,14 @@ ACE_INLINE u_int
 ACE_OS::alarm (u_int secs)
 {
   ACE_OS_TRACE ("ACE_OS::alarm");
-#if defined (ACE_WIN32) || defined (VXWORKS) || defined (CHORUS) || defined (ACE_PSOS)
+#if defined (ACE_WIN32) || defined (VXWORKS) || defined (CHORUS) || defined (ACE_PSOS) \
+|| (defined INTEGRITY178B && defined ACE_LACKS_ALARM)
   ACE_UNUSED_ARG (secs);
 
   ACE_NOTSUP_RETURN (0);
 #else
   return ::alarm (secs);
-#endif /* ACE_WIN32 || VXWORKS || CHORUS || ACE_PSOS */
+#endif /* ACE_WIN32 || VXWORKS || CHORUS || ACE_PSOS || (INTEGRITY178B && ACE_LACKS_ALARM) */
 }
 
 ACE_INLINE int
@@ -257,7 +258,7 @@ ACE_OS::dup (ACE_HANDLE handle)
   else
     ACE_FAIL_RETURN (ACE_INVALID_HANDLE);
   /* NOTREACHED */
-#elif defined (VXWORKS) || defined (ACE_PSOS)
+#elif defined (VXWORKS) || defined (ACE_PSOS) || defined (ACE_LACKS_DUP)
   ACE_UNUSED_ARG (handle);
   ACE_NOTSUP_RETURN (-1);
 #elif defined (ACE_HAS_WINCE)
@@ -406,7 +407,7 @@ ACE_OS::ftruncate (ACE_HANDLE handle, off_t offset)
   else
     ACE_FAIL_RETURN (-1);
   /* NOTREACHED */
-#elif defined (ACE_PSOS_LACKS_PHILE)
+#elif defined (ACE_PSOS_LACKS_PHILE) || defined (ACE_LACKS_FTRUNCATE)
   ACE_UNUSED_ARG (handle);
   ACE_UNUSED_ARG (offset);
   ACE_NOTSUP_RETURN (-1);
@@ -1085,6 +1086,9 @@ ACE_OS::sleep (u_int seconds)
   wait.tv_sec = seconds;
   wait.tv_usec = 0;
   ACE_OSCALL_RETURN (::select (0, 0, 0, 0, &wait), int, -1);
+#elif defined (ACE_LACKS_SLEEP)
+  ACE_UNUSED_ARG (seconds);
+  ACE_NOTSUP_RETURN (-1);
 #else
   ACE_OSCALL_RETURN (::sleep (seconds), int, -1);
 #endif /* ACE_WIN32 */
@@ -1107,8 +1111,11 @@ ACE_OS::sleep (const ACE_Time_Value &tv)
   timeval tv_copy = tv;
 #  if defined(ACE_TANDEM_T1248_PTHREADS)
      ACE_OSCALL_RETURN (::spt_select (0, 0, 0, 0, &tv_copy), int, -1);
-#  else
+#  elif ! defined (ACE_LACKS_SELECT)
      ACE_OSCALL_RETURN (::select (0, 0, 0, 0, &tv_copy), int, -1);
+#  else
+     ACE_UNUSED_ARG (tv);
+     ACE_NOTSUP_RETURN (-1);
 #  endif
 # else  /* ! ACE_HAS_NONCONST_SELECT_TIMEVAL */
   const timeval *tvp = tv;

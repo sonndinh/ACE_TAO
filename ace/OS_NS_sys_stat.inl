@@ -38,7 +38,7 @@ namespace ACE_OS {
   fstat (ACE_HANDLE handle, ACE_stat *stp)
   {
     ACE_OS_TRACE ("ACE_OS::fstat");
-#if defined (ACE_PSOS_LACKS_PHILE)
+#if defined (ACE_PSOS_LACKS_PHILE) || defined (ACE_LACKS_FSTAT)
     ACE_UNUSED_ARG (handle);
     ACE_UNUSED_ARG (stp);
     ACE_NOTSUP_RETURN (-1);
@@ -58,7 +58,7 @@ namespace ACE_OS {
 #  endif
     ACE_OSCALL_RETURN (::fstat (handle, stp), int, -1);
 # endif /* !ACE_HAS_X86_STAT_MACROS */
-#endif /* ACE_PSOS_LACKS_PHILE */
+#endif /* ACE_PSOS_LACKS_PHILE || ACE_LACKS_FSTAT*/
   }
 
 #else /* ACE_WIN32 */
@@ -264,7 +264,7 @@ namespace ACE_OS {
     ACE_OS_TRACE ("ACE_OS::stat");
 #if defined (ACE_HAS_NONCONST_STAT)
     ACE_OSCALL_RETURN (::stat (const_cast <char *> (file), stp), int, -1);
-#elif defined (ACE_PSOS_LACKS_PHILE)
+#elif defined (ACE_PSOS_LACKS_PHILE) || defined (ACE_LACKS_STAT)
     ACE_UNUSED_ARG (file);
     ACE_UNUSED_ARG (stp);
     ACE_NOTSUP_RETURN (-1);
