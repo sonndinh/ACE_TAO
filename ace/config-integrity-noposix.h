@@ -4,60 +4,17 @@
 #define ACE_CONFIG_INTEGRITY178_H
 
 /*
- * This config.h file is for version 5.0.0 of the
- * INTEGRITY-178B RTOS from Green Hills Software
+ * This config.h file is for version 11.4.x of the
+ * INTEGRITY-178 RTOS from Green Hills Software
  * http://www.ghs.com/products/rtos/integrity.html
  */
 
-// This is a specific config file for Leonardo Helicopters system which uses
-// INTEGRITY-178B (v5.0.0 as shown in INTEGRITY-include-full/INTEGRITY_version.h).
+// This is crafted to remove dependency on the POSIX calls provided
+// by libraries available in INTEGRITY but not in INTEGRITY-178.
+// Some network utility and socket functions are also turned off
+// (see the sections near the end of the file).
 
-// The macro INTEGRITY (defined in INTEGRITY.h) and ghs (defined below)
-// seem to have a similar purpose. Maybe converse these two macros at some point?
 #define ghs
-
-// The macro INTEGRITY178B is used in places where the existing INTEGRITY or ghs macros
-// are not sufficient due to difference between Leonardo's INTEGRITY-178 and whatever
-// INTEGRITY version was assumed in this version of ACE. For example, INTEGRITY-178
-// does not have AllocateNullConsoleDescriptor function (see OS_NS_fcntl.cpp).
-// NOTE: if INTEGRITY178B is defined, then INTEGRITY is also defined.
-#define INTEGRITY178B
-
-// For Leonardo Helicopters (LH): exclude unavailable functions in libraries such as
-// libposix_178b_be.a or file systems libraries.
-// Newly introduced macros w.r.t. this ACE version are annotated in the comments.
-#define	ACE_LACKS_FSTAT // new
-#define ACE_LACKS_LSTAT
-#define ACE_LACKS_STAT // new
-#define ACE_LACKS_UMASK
-#define ACE_LACKS_GETTIMEOFDAY // new
-#define ACE_LACKS_ALARM // new
-#define ACE_LACKS_DUP // new
-#define ACE_LACKS_FTRUNCATE // new
-#define ACE_LACKS_GETHOSTNAME // new
-#define ACE_LACKS_SLEEP // new
-#define ACE_LACKS_SELECT // new
-#define ACE_LACKS_READV
-#define ACE_LACKS_WRITEV
-#define ACE_LACKS_KILL // new
-#define ACE_LACKS_SIGEMPTYSET // new
-#define ACE_LACKS_SIGFILLSET // new
-#define ACE_LACKS_SIGISMEMBER // new
-#define ACE_LACKS_SIGADDSET // new
-#define ACE_LACKS_SIGDELSET // new
-#define ACE_LACKS_SIGPROCMASK // new
-#define ACE_LACKS_GETHOSTBYADDR // new
-#define ACE_LACKS_GETHOSTBYNAME // new
-#define ACE_LACKS_GETPROTOBYNAME // new
-#define ACE_LACKS_GETPROTOBYNUMBER // new
-#define ACE_LACKS_GETHOSTBYADDR_R // new
-#define ACE_LACKS_GETHOSTBYNAME_R // new
-#define ACE_LACKS_GETPROTOBYNAME_R // new
-#define ACE_LACKS_GETPROTOBYNUMBER_R // new
-#define ACE_LACKS_INET_ADDR // new
-#define ACE_LACKS_INET_NTOA // new
-#define ACE_LACKS_TIME // new
-#define ACE_LACKS_MMAP
 
 /* compilation defines */
 #define ACE_LACKS_GETPGID
@@ -73,11 +30,10 @@
 //#define ACE_LACKS_GETEGID
 //#define ACE_LACKS_GETGID
 
-// Leonardo doesn't have exception handling
-//#ifndef ACE_HAS_EXCEPTIONS
-//  #define ACE_HAS_EXCEPTIONS
-//#endif
-//#define ACE_NEW_THROWS_EXCEPTIONS
+#ifndef ACE_HAS_EXCEPTIONS
+  #define ACE_HAS_EXCEPTIONS
+#endif
+#define ACE_NEW_THROWS_EXCEPTIONS
 #define ACE_HAS_STANDARD_CPP_LIBRARY 1
 #define ACE_HAS_TEMPLATE_SPECIALIZATION
 #define ACE_TEMPLATES_REQUIRE_SOURCE 1
@@ -91,6 +47,8 @@
 
 // Compiler/platform has correctly prototyped header files.
 #define ACE_HAS_CPLUSPLUS_HEADERS
+
+#define ACE_HAS_SHM_OPEN
 
 /***** Operating System Defines *****/
 
@@ -135,13 +93,16 @@
 #define ACE_LACKS_SYSTEM
 
 /****** Posix Defines *****/
-#define ACE_LACKS_DLFCN_H
-#define ACE_LACKS_REGEX_H
+#define ACE_LACKS_KILL
 
 // These mean the platform has prototypes in header files
 // for these functions.
 #define ACE_HAS_SIGWAIT
 #define ACE_HAS_PTHREAD_SIGMASK_PROTO
+
+// This should be ACE_LACKS_SIGSET_T. Since INTEGRITY has
+// sigset_t, this is not defined.
+//#define ACE_LACKS_SIGSET
 
 #define ACE_LACKS_SUSECONDS_T
 #define ACE_LACKS_USECONDS_T
@@ -210,18 +171,26 @@
 /***** Network utility functions *****/
 #define ACE_LACKS_GETADDRINFO
 #define ACE_LACKS_GAI_STRERROR
+#define ACE_LACKS_GETHOSTBYADDR
+#define ACE_LACKS_GETHOSTBYADDR_R
+#define ACE_LACKS_GETHOSTBYNAME
 #define ACE_LACKS_GETNAMEINFO
+#define ACE_LACKS_GETPROTOBYNAME
+#define ACE_LACKS_GETPROTOBYNUMBER
 #define ACE_LACKS_GETSERVBYNAME
 #define ACE_LACKS_IF_NAMEINDEX
 #define ACE_LACKS_IF_NAMETOINDEX
+#define ACE_LACKS_INET_ADDR
 #define ACE_LACKS_INET_ATON
+#define ACE_LACKS_INET_NTOA
 #define ACE_LACKS_INET_NTOP
 #define ACE_LACKS_INET_PTON
 
 /***** Socket functions *****/
+#define ACE_LACKS_DUP
 #define ACE_LACKS_DUP2
 #define ACE_LACKS_FCNTL
-#define ACE_LACKS_IOCTL // new
+#define ACE_LACKS_IOCTL
 #define ACE_LACKS_RECVMSG
 #define ACE_LACKS_SENDMSG
 #define ACE_LACKS_SHUTDOWN
@@ -230,8 +199,8 @@
 // Add the following macros to config.h to
 // build with --no-exceptions option in MULTI IDE
 //#define ACE_INTEGRITY_NO_EXCEPT
-// and use Leonardo Helicopters' LEONET network library
-//#define ACE_USES_LH_LEONET
+// and use LEONET network library
+//#define ACE_USES_GHS_LEONET
 
 /***** STUFF INTEGRITY 4.0.8 APPEARS TO SUPPORT ****/
 /* note, possibly untested with ace */
@@ -254,14 +223,12 @@ typedef void (*__sighandler_t)(int);
 #include <sys/uio.h> // needed to define iovec
 #define ACE_LACKS_READLINK
 #define ACE_LACKS_GETPPID
-// Comment this out because NSIG is already defined in INTEGRITY-include-full/signal.h
-// May need to uncomment when we exclude POSIX functions.
-//#define NSIG (SIGRTMAX+1)
+#define NSIG (SIGRTMAX+1)
 #define ACE_USES_STD_NAMESPACE_FOR_STDCPP_LIB 1
 #define ACE_USE_RCSID 0
 #define ACE_LACKS_CUSERID
 #define ACE_NEEDS_HUGE_THREAD_STACKSIZE 0x5000
-//#define fileno(file) ((file)->io_channel) //Hack to get Svc_Conf_l.cpp compiled
+#define fileno(file) ((file)->io_channel) //Hack to get Svc_Conf_l.cpp compiled
 #define ACE_DEFAULT_THREAD_PRIORITY 127
 #define PRI_FIFO_MIN 1
 #define PRI_FIFO_MAX 127
@@ -281,7 +248,7 @@ extern "C" {
 int unlink(const char *);
 }
 
-//#define ACE_HAS_VOIDPTR_GETTIMEOFDAY
+#define ACE_HAS_VOIDPTR_GETTIMEOFDAY
 #define ACE_LACKS_UNIX_SYSLOG
 #define ACE_LACKS_TELLDIR
 #define ACE_LACKS_SEEKDIR

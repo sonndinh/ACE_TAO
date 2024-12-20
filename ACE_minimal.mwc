@@ -1,0 +1,37 @@
+workspace {
+  exclude {
+    ACEXML
+    ASNMP
+    apps
+    bin
+    netsvcs
+    protocols
+    Kokyu
+    examples
+    performance-tests
+    websvcs
+  }
+
+  // The associate scope does not add directories to the workspace;
+  // it only associates a name with one or more directories.
+  associate(examples) {
+    examples
+  }
+  associate(tests) {
+    performance-tests
+    tests
+  }
+  associate(gperf) {
+    gperf
+  }
+
+  // The '--' is a special key that indicates that the associated
+  // projects should be of the form @NAME@ in the generated Makefile.am.
+  associate(--) {
+    ACEXML
+    ASNMP
+    protocols
+    KOKYU
+    TAO
+  }
+}

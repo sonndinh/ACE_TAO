@@ -1,0 +1,9 @@
+*vcxproj*
+*.gpj
+*.int
+*.sln
+.custom_build_rule
+.empty_html_file
+build/
+lib/ACEd*
+bin/*exe*

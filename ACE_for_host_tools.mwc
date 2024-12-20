@@ -1,0 +1,4 @@
+workspace {
+  $(ACE_ROOT)/ace/ace.mpc
+  $(ACE_ROOT)/apps/gperf/src
+}
